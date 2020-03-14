@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "345444413795",
+    "firebase_url": "https://cafeoma-e0164.firebaseio.com",
+    "project_id": "cafeoma-e0164",
+    "storage_bucket": "cafeoma-e0164.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345444413795:android:4fe0fdef44015908a7e356",
+        "android_client_info": {
+          "package_name": "com.vespa.baek.cafeoma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345444413795-gqbk2tfus05ts19u87v4vrgpe1c0jpa6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vespa.baek.cafeoma",
+            "certificate_hash": "bf237f53a04c1b9f7c3757bab6b9657e6b7bd494"
+          }
+        },
+        {
+          "client_id": "345444413795-dvms1msu8j5vdrqsma8vkcntomcpbnk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrRGWlX5l7UA3RgTCVKGMQqipCK0Icozc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345444413795-dvms1msu8j5vdrqsma8vkcntomcpbnk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
