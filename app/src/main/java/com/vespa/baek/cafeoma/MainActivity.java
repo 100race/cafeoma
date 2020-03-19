@@ -13,29 +13,40 @@ import android.util.Log;
 import android.content.pm.Signature;
 
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.MessageDigest;
 
 public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
 
-
-
         getHashKey(mContext);
+
+        //initialize auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
+    //시작시 구글 로그인 확인하는 메서드
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        //여기서 currenUser이 null로오면 로그인액티비티로 넘어가게?
+        //기존 로그인되어있던 사용자로 초기화하는 코드 필요
+    }
 
-
-
-
-
-    // 프로젝트의 해시키를 반환
+    // [[프로젝트의 해시키를 반환]]
 
     @Nullable
 
@@ -86,5 +97,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+//        try {
+//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+//            account.getIdToken();
+//        }
 }
+
+
 
