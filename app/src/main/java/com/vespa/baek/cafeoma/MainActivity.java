@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -42,8 +43,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(intent);
+        }
         //여기서 currenUser이 null로오면 로그인액티비티로 넘어가게?
         //기존 로그인되어있던 사용자로 초기화하는 코드 필요
+
+
     }
 
     // [[프로젝트의 해시키를 반환]]
@@ -51,31 +58,17 @@ public class MainActivity extends AppCompatActivity {
     @Nullable
 
     public static String getHashKey(Context context) {
-
         final String TAG = "KeyHash";
-
         String keyHash = null;
-
         try {
-
             PackageInfo info =
-
                     context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
-
-
-
             for (Signature signature : info.signatures) {
-
                 MessageDigest md;
-
                 md = MessageDigest.getInstance("SHA");
-
                 md.update(signature.toByteArray());
-
                 keyHash = new String(Base64.encode(md.digest(), 0));
-
                 Log.d(TAG, keyHash);
-
             }
 
         } catch (Exception e) {
@@ -84,25 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-
         if (keyHash != null) {
-
             return keyHash;
-
         } else {
-
             return null;
-
         }
 
     }
 
-//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-//        try {
-//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            account.getIdToken();
-//        }
 }
 
 

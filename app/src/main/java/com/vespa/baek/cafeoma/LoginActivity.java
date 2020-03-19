@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -39,7 +41,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private CallbackManager callbackManager;                                                        //글로벌로 선언 해줘야됨
+    private CallbackManager mCallbackManager;                                                        //글로벌로 선언 해줘야됨
     private static final String TAG = "Login";                                                      //로그인과 관련된 로그 태그
     private static final int RC_LOGIN = 100;                                                      //ResultCode_LOGIN - google관련코드였음 아니어도 쓸수있을듯
     LoginButton facebook_login;                                                                     //페이스북 로그인버튼
@@ -53,46 +55,45 @@ public class LoginActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         AppEventsLogger.activateApp(this);
-        callbackManager = CallbackManager.Factory.create();
-
-        // Facebook login 버튼추가
-        facebook_login = (LoginButton) findViewById(R.id.facebook_login_button);
-        facebook_login.setReadPermissions("email");
 
         // Google login 버튼추가 -구글은 따로 onClick등록
         google_login = (SignInButton) findViewById(R.id.google_login_button);
 
+        // [START Facebook login initialize]
+        // Facebook login 버튼추가
+        facebook_login = (LoginButton) findViewById(R.id.facebook_login_button);
+        facebook_login.setReadPermissions("email");
+        mCallbackManager = CallbackManager.Factory.create();
+
 
 
         // facebook 로그인매니저에 Callback 등록
-        LoginManager.getInstance().registerCallback(callbackManager,
-                new FacebookCallback<LoginResult>() {
-                    @Override
-                    public void onSuccess(LoginResult loginResult) {
-                        // App code 메인엑티비티로 연결할것
-                        Log.d(TAG,"페이스북 로그인성공 LoginResult="+loginResult);
-                        Log.d(TAG,"페이스북 토큰 ->"+loginResult.getAccessToken().getToken()); //일단 추가해본라인
-                        Log.d(TAG,"페이스북 UserID ->"+loginResult.getAccessToken().getUserId());
-                        Intent intent=new Intent(getApplicationContext(),MainActivity.class);                      // 다음액티비티 이름 MainActivity로 정함 context에 이렇게 넣어도되던가?
-                        startActivity(intent);
-                    }
 
-                    @Override
-                    public void onCancel() {
-                        // App code
-                        Log.d(TAG,"페이스북 로그인취소");
-                    }
+        facebook_login.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
 
-                    @Override
-                    public void onError(FacebookException exception) {
-                        // App code
-                        Log.d(TAG,"페이스북 로그인에러");
-                    }
-                });
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:onError", error);
+
+            }
+        });
+        // [END Facebook login initialize]
+
 
         // [[START 구글로그인 코드 -onCreate 안에 넣어줌]]
 
-        // [Configure 구글 로그인]
+        // [START Configure 구글 로그인]
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))                                          //구글링으로 추가해준라인
                 .requestEmail()
@@ -129,13 +130,15 @@ public class LoginActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_LOGIN);                                           //ResultCode
     }
 
-    //구글
+    //구글 & 페북조금
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data); //facebook로그인과 필요한부분
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        //facebook 액티비티 result를 facebook sdk로 전달해줌
+        mCallbackManager.onActivityResult(requestCode, resultCode, data); //facebook로그인과 필요한부분
+
+        //GoogleSignInApi.getSignInIntent result에 따른 설정
         if (requestCode == RC_LOGIN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -146,10 +149,8 @@ public class LoginActivity extends AppCompatActivity {
 //                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
 //                startActivity(intent);
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "구글 로그인 실패", e);
-                // [START_EXCLUDE]
-                // [END_EXCLUDE]
+
             }
         }
 
@@ -159,7 +160,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() { //일단 시작이 LoginActivity일 때
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // 시작시 로그인 한 계정있나 확인 - 페북구글공통
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
@@ -177,17 +178,40 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "파이어베이스 인증 성공");
                             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                             startActivity(intent);
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "파이어베이스 인증 실패", task.getException());
-
                         }
-
-
                     }
                 });
     }
+
+    // [START auth_with_facebook]
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "페이스북 파이어베이스 인증 성공");
+                            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(intent);
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "페이스북 파이어베이스 인증 실패", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+    }
+    // [END auth_with_facebook]
 
 
 }
