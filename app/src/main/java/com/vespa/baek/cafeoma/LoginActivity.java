@@ -5,10 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -29,14 +34,21 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -46,8 +58,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_LOGIN = 100;                                                      //ResultCode_LOGIN - google관련코드였음 아니어도 쓸수있을듯
     LoginButton facebook_login;                                                                     //페이스북 로그인버튼
     SignInButton google_login;
+    Button email_login;
+    EditText emailbox;
+    ActionCodeSettings mActionCodeSettings;
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +75,17 @@ public class LoginActivity extends AppCompatActivity {
         // Google login 버튼추가 -구글은 따로 onClick등록
         google_login = (SignInButton) findViewById(R.id.google_login_button);
 
+        // Email login 버튼추가
+        email_login = (Button)findViewById(R.id.email_login_button);
+        email_login.setOnClickListener((view)->onClick(view));
+        emailbox = (EditText)findViewById(R.id.emailbox);
+        emailbox.setOnClickListener(view->onClick(view));
+
         // [START Facebook login initialize]
         // Facebook login 버튼추가
         facebook_login = (LoginButton) findViewById(R.id.facebook_login_button);
         facebook_login.setReadPermissions("email");
         mCallbackManager = CallbackManager.Factory.create();
-
-
 
         // facebook 로그인매니저에 Callback 등록
 
@@ -99,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        // [END config_signin]
+        // [END configure 구글 로그인]
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
@@ -121,6 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG,"구글 로그인시도");
                 signIn();
                 break;
+            case R.id.email_login_button:
+                emailLogin();
+                break;
+
         }
 
     }
@@ -128,6 +152,84 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_LOGIN);                                           //ResultCode
+    }
+
+
+    //이메일
+    public void emailLogin() {
+        String email = emailbox.getText().toString();
+
+        if(emailbox.getVisibility() == View.GONE) {
+            emailbox.setVisibility(View.VISIBLE);
+        }else if(emailbox.getVisibility() == View.VISIBLE && isValidEmail(email)) {
+            //로그인 과정
+            Log.d(TAG,"이메일 로그인시도");
+            buildActionCodeSettings();
+            sendSignInLink(email,mActionCodeSettings);
+
+        }else{
+            //로그인 실패 출력
+            Toast.makeText(this,"이메일이 유효하지 않습니다.",Toast.LENGTH_SHORT).show();
+        }
+        }
+
+    public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
+        // [START auth_send_sign_in_link]
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        //이메일을 프레퍼런스에 저장해줌
+        SharedPreferences pref = getSharedPreferences("email", Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("user-email",email);
+        editor.commit();
+
+        auth.sendSignInLinkToEmail(email, actionCodeSettings)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "이메일 보냄");
+                            Intent intent = new Intent(getApplicationContext(),NotifyEmailSendActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+        // [END auth_send_sign_in_link]
+    }
+
+    //이메일 - 동적링크 수신부분
+    public void receptDeepLink(){
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                        }
+                        //딥링크 성공시
+
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "getDynamicLink:onFailure", e);
+                    }
+                });
+    }
+
+    //이메일 유효성체크
+    public static boolean isValidEmail(String email) {
+        boolean err = false;
+        String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(email);
+        if(m.matches()) {
+            err = true;
+        }
+        return err;
     }
 
     //구글 & 페북조금
@@ -146,8 +248,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account); //얘가문제
                 Log.w(TAG, "구글 로그인 성공");
-//                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-//                startActivity(intent);
+
             } catch (ApiException e) {
                 Log.w(TAG, "구글 로그인 실패", e);
 
@@ -212,6 +313,27 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
     // [END auth_with_facebook]
+
+    //[START auth_with_emaillink]
+
+    public void buildActionCodeSettings() {
+        // [START auth_build_action_code_settings]
+        mActionCodeSettings =
+                ActionCodeSettings.newBuilder()
+                        // URL you want to redirect back to. The domain (www.example.com) for this
+                        // URL must be whitelisted in the Firebase Console. -했어
+                        .setUrl("https://www.example.com") //이게맞는진몰겠음 - 내생각에는 컴퓨터에서 열릴 코드인듯 설정안했더니 오류나서 다시써봄
+                        // This must be true
+                        .setHandleCodeInApp(true)
+                        .setAndroidPackageName(
+                                "com.vespa.baek.cafeoma", //여기서 패키지네임 마지막에 android가 들어가야하는지 모르겠음 다른곳엔 ios써있길래 - 왠지 안들어갈거같아서 지움
+                                true, /* installIfNotAvailable */
+                                "22"    /* minimumVersion */)
+                        .build();
+        // [END auth_build_action_code_settings]
+    }
+
+    //[END auth_with_emaillink
 
 
 }
