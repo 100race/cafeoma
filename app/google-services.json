@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "345444413795-3q7edqp9eq8845qat70pl915mucqgql2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vespa.baek.cafeoma",
+            "certificate_hash": "4426990ffc8ab579a81cde354972c492deeace4b"
+          }
+        },
+        {
           "client_id": "345444413795-dvms1msu8j5vdrqsma8vkcntomcpbnk9.apps.googleusercontent.com",
           "client_type": 3
         }

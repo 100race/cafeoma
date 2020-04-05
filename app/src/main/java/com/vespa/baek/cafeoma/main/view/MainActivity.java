@@ -1,4 +1,4 @@
-package com.vespa.baek.cafeoma;
+package com.vespa.baek.cafeoma.main.view;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +22,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.vespa.baek.cafeoma.LoginActivity;
+import com.vespa.baek.cafeoma.R;
 
 import java.security.MessageDigest;
 
@@ -51,16 +53,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //시작시 구글 로그인 확인하는 메서드
+    //여기서 currenUser이 null로오면 로그인 액티비티로 넘어가게 해줌
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+        } else{ //시작할때 현재 사용자가있으면 데베 있나 확인. 없을 시 최초
+           // String email = currentUser.getEmail();
+            //구현 나중단계에. 일단 리사이클러 뷰 잘 작동하는지부터 확인 하고
         }
-        //여기서 currenUser이 null로오면 로그인액티비티로 넘어가게?
-        //기존 로그인되어있던 사용자로 초기화하는 코드 필요
+
+
+
 
 
     }

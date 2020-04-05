@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.vespa.baek.cafeoma.main.view.MainActivity;
 
 public class VerifyEmailLoginActivity extends AppCompatActivity {
 
@@ -49,7 +50,7 @@ public class VerifyEmailLoginActivity extends AppCompatActivity {
                                 // 사용자 추가 됨 알아서
                                 // You can check if the user is new or existing:
                                 // result.getAdditionalUserInfo().isNewUser()
-                                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
                             } else {
                                 Log.e("LOGIN", "이메일 링크로 로그인 실패", task.getException());
