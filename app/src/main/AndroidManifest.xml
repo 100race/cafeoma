@@ -10,7 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".inventory.view.ModifyInventoryActivity"></activity>
-        <activity android:name=".inventory.view.InventoryActivity" />
+        <activity android:name=".inventory.view.InventoryActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+            </intent-filter>
+        </activity>
         <activity android:name=".NotifyEmailSendActivity" />
         <activity android:name=".VerifyEmailLoginActivity">
             <intent-filter>
@@ -20,7 +25,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="cafeoma.page.link"
+                    android:host="cafeoma2.page.link"
                     android:scheme="https" />
             </intent-filter>
         </activity>
@@ -54,6 +59,8 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <meta-data android:name="android.max_aspect" android:value="2.1" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

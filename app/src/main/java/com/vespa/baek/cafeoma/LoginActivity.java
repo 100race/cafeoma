@@ -317,7 +317,7 @@ public class LoginActivity extends AppCompatActivity {
         mActionCodeSettings =
                 ActionCodeSettings.newBuilder()
                         // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be whitelisted in the Firebase Console. -했어
+                        // URL을 반드시 승인된 화이트리스트에 등록해줘야함. 이거랑 도메인 등록해줌 @@해결
                         .setUrl("https://www.example.com") //이게맞는진몰겠음 - 내생각에는 컴퓨터에서 열릴 코드인듯 설정안했더니 오류나서 다시써봄
                         // This must be true
                         .setHandleCodeInApp(true)

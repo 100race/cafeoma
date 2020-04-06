@@ -3,11 +3,19 @@ package com.vespa.baek.cafeoma.inventory.data;
 public class Item { //내부 멤버변수를 private로 선언했음 보안을 위하여
     private String image;
     private String name;
-    private int quantity;
+    private long quantity;
     private String remark; // 비고
     private String shopUrl;
 
     public Item(){}
+
+    public Item(String image, String name, long quantity, String remark, String shopUrl) {
+        this.image = image;
+        this.name = name;
+        this.quantity = quantity;
+        this.remark = remark;
+        this.shopUrl = shopUrl;
+    }
 
     public String getImage() {
         return image;
@@ -25,9 +33,7 @@ public class Item { //내부 멤버변수를 private로 선언했음 보안을 �
         this.name = name;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
+    public long getQuantity() { return quantity; }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;

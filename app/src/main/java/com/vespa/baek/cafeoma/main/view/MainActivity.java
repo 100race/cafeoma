@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.vespa.baek.cafeoma.LoginActivity;
 import com.vespa.baek.cafeoma.R;
+import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 
 import java.security.MessageDigest;
 
@@ -31,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
     private FirebaseAuth mAuth;
-    private Button logOut_btn;
+    private Button btn_logout;
+    private Button btn_toInventory;
     //뒤로가기버튼관련변수
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
@@ -48,8 +50,13 @@ public class MainActivity extends AppCompatActivity {
         //initialize auth
         mAuth = FirebaseAuth.getInstance();
 
-        logOut_btn = (Button)findViewById(R.id.logout);
-        logOut_btn.setOnClickListener(view->onClick(view));
+        btn_logout = (Button)findViewById(R.id.btn_logout);
+        btn_logout.setOnClickListener(view->onClick(view));
+
+        btn_toInventory = findViewById(R.id.btn_toInventory);
+        btn_toInventory.setOnClickListener(view->onClick(view));
+
+
     }
 
     //시작시 구글 로그인 확인하는 메서드
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     public void logOut(){
         FirebaseAuth.getInstance().signOut();
         FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
+        Log.d("LOGOUT", "로그아웃성공");
         if (currentUser == null) {
             Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(intent);
@@ -106,9 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View v){
         switch(v.getId()) {
-            case R.id.logout:
-                Log.d("LOGOUT", "구글 로그인시도");
+            case R.id.btn_logout:
                 logOut();
+                break;
+            case R.id.btn_toInventory:
+                Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                startActivity(intent);
                 break;
         }
     }
