@@ -35,7 +35,7 @@ public class Item { //내부 멤버변수를 private로 선언했음 보안을 �
 
     public long getQuantity() { return quantity; }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
 

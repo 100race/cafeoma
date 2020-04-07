@@ -6,4 +6,139 @@
     android:layout_height="match_parent"
     tools:context=".inventory.view.ModifyInventoryActivity">
 
+    <EditText
+        android:id="@+id/et_shopUrl"
+        android:layout_width="107dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="439dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_u"
+        app:layout_constraintTop_toBottomOf="@+id/et_quantity" />
+
+    <TextView
+        android:id="@+id/tv_u"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="95dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="20dp"
+        android:text="구입주소"
+        app:layout_constraintBottom_toTopOf="@+id/et_remark"
+        app:layout_constraintEnd_toStartOf="@+id/et_shopUrl"
+        app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
+        app:layout_constraintTop_toBottomOf="@+id/tv_q" />
+
+    <TextView
+        android:id="@+id/tv_q"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
+        android:text="수량"
+        app:layout_constraintBottom_toTopOf="@+id/tv_u"
+        app:layout_constraintEnd_toStartOf="@+id/et_quantity"
+        app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
+        app:layout_constraintTop_toBottomOf="@+id/tv_n" />
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="51dp"
+        android:layout_marginEnd="73dp"
+        android:layout_marginTop="306dp"
+        android:text="저장"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+        app:layout_constraintTop_toBottomOf="@+id/et_remark" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="53dp"
+        android:layout_marginEnd="82dp"
+        android:layout_marginStart="80dp"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_save"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_remark" />
+
+    <ImageView
+        android:id="@+id/iv_selectImage"
+        android:layout_width="129dp"
+        android:layout_height="170dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="68dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_remark"
+        app:layout_constraintEnd_toStartOf="@+id/tv_u"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_gallery"
+        android:scaleType="fitCenter"/>
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="107dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="84dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_quantity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_n"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_n"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="11dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="84dp"
+        android:text="재고명"
+        app:layout_constraintBottom_toTopOf="@+id/tv_q"
+        app:layout_constraintEnd_toStartOf="@+id/et_name"
+        app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_remark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="304dp"
+        android:layout_marginEnd="159dp"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="43dp"
+        android:ems="10"
+        android:hint="비고"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/btn_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_selectImage" />
+
+    <EditText
+        android:id="@+id/et_quantity"
+        android:layout_width="107dp"
+        android:layout_height="42dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="63dp"
+        android:layout_marginTop="11dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/et_shopUrl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_q"
+        app:layout_constraintTop_toBottomOf="@+id/et_name" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
