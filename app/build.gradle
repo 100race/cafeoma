@@ -64,4 +64,6 @@ dependencies {
     //파이어스토어를 위한 firebaseUI
     implementation 'com.firebaseui:firebase-ui-firestore:6.2.0'
     implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
+
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
 }

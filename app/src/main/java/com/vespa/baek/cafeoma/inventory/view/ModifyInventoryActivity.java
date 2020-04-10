@@ -53,6 +53,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
+    private String imageUrl;
 
 
     @Override
@@ -66,6 +67,8 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         //Item 초기화 안함* ItemModel도 - 초기화안하고 써서 오류난듯
         item = new Item();
         itemModel = new ItemModel();
+
+        imageUrl = "디폴트값으로초기화";
 
         et_name = findViewById(R.id.et_name);
         et_quantity = findViewById(R.id.et_quantity);
@@ -88,62 +91,90 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.btn_save:
                 //저장을 누른 순간 이미지를 storage에 저장할것임
+                //[storage에 이미지 저장]
                 firebaseStorage = FirebaseStorage.getInstance();
-                StorageReference storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
-                //uploadTask = storageRef.putFile(selectedImageUri);
+                storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
+                uploadTask = storageRef.putFile(selectedImageUri);
+                //[구글링으로찾은방법 얘도 돌아가긴함]
+//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                //pd.dismiss();
+//                                Toast.makeText(ModifyInventoryActivity.this, "성공적으로 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
+//                                //Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
+//                                Task<Uri> downloadUri = storageRef.getDownloadUrl();
+//                                downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                    @Override
+//                                    public void onSuccess(Uri uri) {
+//                                        imageUrl = uri.toString();
+//                                        item.setImage(imageUrl);
+//                                        Log.d("이미지",imageUrl);
+//                                    }
+//                                });
+//
+//
+//                                }
+//
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Toast.makeText(ModifyInventoryActivity.this,"이미지를 저장하지 못했습니다.",Toast.LENGTH_SHORT).show();
+//                                Log.d("이미지","실패");
+//                            }
+//                        });
+                //[문서에나온방법 - 얘도 올려는 짐]
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
 
-// Register observers to listen for when the download is done or if it fails
-//                uploadTask.addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Handle unsuccessful uploads
-//                        Toast.makeText(ModifyInventoryActivity.this,"이미지를 저장하지 못했습니다.",Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-//                    }
-//                });
+                        // Continue with the task to get the download URL
+                        return storageRef.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
+                            imageUrl = downloadUri.toString();
+                            Log.d("이미지",imageUrl); //이게 더 나중에 실행되는거같으니까 실행을 여기로 옮겨보자
+        //여기로이동                    // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
+                            item.setImage(imageUrl);
+                            item.setName(String.valueOf(et_name.getText()));
+                            item.setRemark(String.valueOf(et_remark.getText()));
+                            item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
+                            item.setShopUrl(String.valueOf(et_shopUrl.getText()));
 
-                storageRef.putFile(selectedImageUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                //pd.dismiss();
-                                Toast.makeText(ModifyInventoryActivity.this, "Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
+                            //오류발생
+                            //[firestore에 데이터 저장]
+                            itemModel.saveItem(item,db);
 
-                                if (downloadUri.isSuccessful()) {
-                                    String generatedFilePath = downloadUri.getResult().toString();
-                                    System.out.println("## Stored path is " + generatedFilePath);
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                //pd.dismiss();
-                            }
-                        });
+                        }
+                    }
+                });
 
 
 
 
 
-        String imageUrl = storageRef.child(selectedImageUri.getLastPathSegment()).getDownloadUrl().toString();
-                Log.d("이미지",imageUrl);
+
+        //String imageUrl = storageRef.child(selectedImageUri.getLastPathSegment()).getDownloadUrl().toString();
+                Log.d("이미지2",imageUrl); //여기는 디폴트값으로초기화라고뜸
 
 
-                // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
-                item.setImage(imageUrl);
-                item.setName(String.valueOf(et_name.getText()));
-                item.setRemark(String.valueOf(et_remark.getText()));
-                item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-
-                //오류발생
-                itemModel.saveItem(item,db);
+//      위치이동          // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
+//                item.setImage(imageUrl);
+//                item.setName(String.valueOf(et_name.getText()));
+//                item.setRemark(String.valueOf(et_remark.getText()));
+//                item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
+//                item.setShopUrl(String.valueOf(et_shopUrl.getText()));
+//
+//                //오류발생
+//                //[firestore에 데이터 저장]
+//                itemModel.saveItem(item,db);
 
                 intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
                 startActivity(intent);
