@@ -25,7 +25,7 @@ public class ItemModel {
 
     //[InventoryActivity]
     //검색 - 입력받은 재고명, 수량에 맞는 정보를 db에서 찾아 불러온다
-    public void searchData() {
+    public void searchItem() {
 
     }
 
@@ -35,6 +35,9 @@ public class ItemModel {
     //수정 - 저장한 정보를 수정 액티비티로 넘겨줌 또는 수정액티비티에서 이 정보에 접근하도록 설정. 수정액티비티에서 저장, 취소, 뒤로가기 누르면 로컬 정보 삭제하기
 
     //삭제 - 나중에
+    public void deleteItem() {
+
+    }
 
 
 

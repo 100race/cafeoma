@@ -2,11 +2,21 @@ package com.vespa.baek.cafeoma.inventory.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +38,7 @@ import com.vespa.baek.cafeoma.inventory.data.Item;
 import com.vespa.baek.cafeoma.inventory.data.ItemModel;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 /*
@@ -37,6 +48,11 @@ import java.util.Objects;
  */
 public class ModifyInventoryActivity extends AppCompatActivity {
 
+    private final String TAG = "permission";
+    private final int GET_GALLERY_IMAGE = 200;
+    private final int CAMERA_IMAGE = 201;
+
+    //[VIEW]
     private EditText et_name;
     private EditText et_quantity;
     private EditText et_remark;
@@ -46,29 +62,36 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private Button btn_cancel;
     private Item item;
     private ItemModel itemModel;
+    private AlertDialog alert;
+
+
     private FirebaseFirestore db;
     private Intent intent;
-    private final int GET_GALLERY_IMAGE = 200;
     private Uri selectedImageUri; // 갤러리에서 받아온 이미지를 저장 버튼 누를때까지 저장할 로컬장소
+    private Uri imageUri;
+    private String currentPhotoPath;
+
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
     private String imageUrl;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_inventory);
-        //시작시 받아온 데이터 있으면 뿌려줌
+        //시작시 수정버튼으로 시작했으면 받아온 데이터 뿌려줌
         //추가 버튼으로 눌려왔으면 빈액티비티로 시작함
 
         db = FirebaseFirestore.getInstance();
-        //Item 초기화 안함* ItemModel도 - 초기화안하고 써서 오류난듯
+        //item, itemModel 객체 초기화 안하고 써서 오류남;
         item = new Item();
         itemModel = new ItemModel();
 
-        imageUrl = "디폴트값으로초기화";
+        imageUrl = "";
 
         et_name = findViewById(R.id.et_name);
         et_quantity = findViewById(R.id.et_quantity);
@@ -78,16 +101,13 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         btn_save = findViewById(R.id.btn_save);
         btn_cancel = findViewById(R.id.btn_cancel);
 
-
-        //Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
-
         btn_save.setOnClickListener(view -> onClick(view));
         btn_cancel.setOnClickListener(view -> onClick(view));
         iv_selectImage.setOnClickListener(view -> onClick(view));
 
     }
 
-    public void onClick(View v) { //여기서 이미지 저장되는 무언가에 문제가있는것같음
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
                 //저장을 누른 순간 이미지를 storage에 저장할것임
@@ -95,35 +115,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                 firebaseStorage = FirebaseStorage.getInstance();
                 storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
                 uploadTask = storageRef.putFile(selectedImageUri);
-                //[구글링으로찾은방법 얘도 돌아가긴함]
-//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                            @Override
-//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                                //pd.dismiss();
-//                                Toast.makeText(ModifyInventoryActivity.this, "성공적으로 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
-//                                //Task<Uri> downloadUri = taskSnapshot.getStorage().getDownloadUrl();
-//                                Task<Uri> downloadUri = storageRef.getDownloadUrl();
-//                                downloadUri.addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                    @Override
-//                                    public void onSuccess(Uri uri) {
-//                                        imageUrl = uri.toString();
-//                                        item.setImage(imageUrl);
-//                                        Log.d("이미지",imageUrl);
-//                                    }
-//                                });
-//
-//
-//                                }
-//
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                Toast.makeText(ModifyInventoryActivity.this,"이미지를 저장하지 못했습니다.",Toast.LENGTH_SHORT).show();
-//                                Log.d("이미지","실패");
-//                            }
-//                        });
-                //[문서에나온방법 - 얘도 올려는 짐]
+
                 Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -148,7 +140,6 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                             item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
                             item.setShopUrl(String.valueOf(et_shopUrl.getText()));
 
-                            //오류발생
                             //[firestore에 데이터 저장]
                             itemModel.saveItem(item,db);
 
@@ -157,47 +148,166 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                 });
 
 
-
-
-
-
-        //String imageUrl = storageRef.child(selectedImageUri.getLastPathSegment()).getDownloadUrl().toString();
-                Log.d("이미지2",imageUrl); //여기는 디폴트값으로초기화라고뜸
-
-
-//      위치이동          // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
-//                item.setImage(imageUrl);
-//                item.setName(String.valueOf(et_name.getText()));
-//                item.setRemark(String.valueOf(et_remark.getText()));
-//                item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-//                item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-//
-//                //오류발생
-//                //[firestore에 데이터 저장]
-//                itemModel.saveItem(item,db);
-
                 intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 break;
             case R.id.iv_selectImage:
-                //사진선택해오는부분
-                intent = new Intent(Intent.ACTION_PICK);
-                intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, GET_GALLERY_IMAGE);
-                break;
+                //권한설정
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "권한 설정 완료");
+                        photoDialogRadio();
+                        break;
+                    } else {
+                        Log.d(TAG, "권한 설정 요청");
+                        ActivityCompat.requestPermissions(ModifyInventoryActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    }
+                }
+
+
+
         }
 
     }
-    //사진선택해오는걸 받는부분
+    //사진촬영/갤러리 선택해 온 결과 받는부분
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
-            selectedImageUri = data.getData();
-            iv_selectImage.setImageURI(selectedImageUri);
+        if(resultCode != RESULT_OK){
+            return;
+        }
+        switch (requestCode){
+            case GET_GALLERY_IMAGE : {
+                //앨범에서 가져오기
+                if(data.getData()!=null){
+                    try{
+                        selectedImageUri = data.getData();
+                        iv_selectImage.setImageURI(selectedImageUri);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            }
+            case CAMERA_IMAGE : {
+                //카메라 촬영
+                try{
+                    Log.v("알림", "FROM_CAMERA 처리");
+                    galleryAddPic();
+                    iv_selectImage.setImageURI(imageUri);
+                    selectedImageUri = imageUri;
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+
+    }
+
+
+
+
+    //사진권한 받은 후 처리
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "onRequestPermissionsResult");
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Permission: " + permissions[0] + "was " + grantResults[0]);
+            //사진 촬영 vs 선택 메서드 실행
+            photoDialogRadio();
         }
     }
+
+//사진촬영할지 갤러리에서 가져올 지 선택
+    private void photoDialogRadio() {
+        final CharSequence[] PhotoModels = {"사진 촬영", "갤러리에서 가져오기"};
+        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
+        alt_builder.setTitle("사진 가져오기");
+        alt_builder.setSingleChoiceItems(PhotoModels, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == 0) { //사진촬영
+                    takePhoto();//사진촬영메서드
+                    alert.dismiss(); // 끝나고 돌아오면 창꺼주기
+                } else if (item == 1) { //갤러리에서 가져오기
+                    intent = new Intent(Intent.ACTION_PICK);
+                    intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intent, GET_GALLERY_IMAGE);
+                    alert.dismiss();
+                }
+            }
+        });
+        alert = alt_builder.create();
+        alert.show();
+    }
+
+    //사진 찍기 클릭시 이벤트
+    public void takePhoto(){
+
+        // 촬영 후 이미지 가져옴
+        String state = Environment.getExternalStorageState();
+
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if(intent.resolveActivity(getPackageManager())!=null){
+
+                File photoFile = null;
+                try{
+                    photoFile = createImageFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                if(photoFile!=null){
+                    Uri providerURI = FileProvider.getUriForFile(this,getPackageName()+ ".provider",photoFile); // + ".provider"추가해봄
+                    imageUri = providerURI;
+                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, providerURI);
+                    startActivityForResult(intent, CAMERA_IMAGE);
+
+                }
+
+            }
+
+        }else{
+
+            Log.v("알림", "저장공간에 접근 불가능");
+
+            return;
+
+        }
+
+
+    }
+//찍은 사진을 이미지파일로 만들기
+    public File createImageFile() throws IOException{
+        String imgFileName = System.currentTimeMillis() + ".jpg";
+        File imageFile= null;
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
+        if(!storageDir.exists()){
+            //없으면 만들기
+            Log.v("알림","storageDir 존재 x " + storageDir.toString());
+            storageDir.mkdirs();
+        }
+        Log.v("알림","storageDir 존재함 " + storageDir.toString());
+        imageFile = new File(storageDir,imgFileName);
+        currentPhotoPath = imageFile.getAbsolutePath();
+        return imageFile;
+
+    }
+//찍은 사진 갤러리에 저장
+    public void galleryAddPic(){
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
+        Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
+
+    }
+
+
 }

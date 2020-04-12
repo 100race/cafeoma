@@ -2,11 +2,14 @@ package com.vespa.baek.cafeoma.main.view;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Button btn_logout;
     private Button btn_toInventory;
+
     //뒤로가기버튼관련변수
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
@@ -55,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         btn_toInventory = findViewById(R.id.btn_toInventory);
         btn_toInventory.setOnClickListener(view->onClick(view));
+
+
 
 
     }

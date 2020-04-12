@@ -65,6 +65,9 @@ public class InventoryActivity extends AppCompatActivity {
                 .build();
 
         adapter = new FirestoreRecyclerAdapter<Item, InventoryViewHolder>(options) {
+
+
+
             @NonNull
             @Override
             public InventoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {  //뷰홀더를 최초로 만들어내는곳 인플레이터활용
@@ -100,6 +103,7 @@ public class InventoryActivity extends AppCompatActivity {
                 );
             }
         };
+
         //위치 일로 옮겨봄
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -158,24 +162,3 @@ public class InventoryActivity extends AppCompatActivity {
     }
 }
 
-
-//테스트용
-//
-//        DocumentReference docRef = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").document("79fDM5YNF08WdtCGveWd");
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Log.d("재고", "DocumentSnapshot data: " + document.getData());
-//                    } else {
-//                        Log.d("재고", "No such document");
-//                    }
-//                } else {
-//                    Log.d("재고", "get failed with ", task.getException());
-//                }
-//            }
-//        });
-
-//
