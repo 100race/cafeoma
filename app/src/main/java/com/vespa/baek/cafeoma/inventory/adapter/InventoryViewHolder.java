@@ -34,6 +34,7 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder { // 여기에 
 
     }
 
+
     public void setSelectionTracker(SelectionTracker<Long> selectionTracker) {
         if(selectionTracker!=null && selectionTracker.isSelected((long) getAdapterPosition())){
             //checkBox.setImageResource(android.R.drawable.checkbox_on_background); 선택되면 바꿀부분 -> 오 진짜 바꿔짐 04.13. 04:29 여기에서 걍 정보를 넣어서 삭제처리나중에 해도될듯?

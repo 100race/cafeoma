@@ -1,8 +1,10 @@
 package com.vespa.baek.cafeoma.inventory.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
+
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.selection.SelectionTracker;
@@ -26,14 +31,36 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryViewHolder> {
 
+    private ArrayList<Item> items;
+    private SparseBooleanArray selectedItems;
+    private Context context;
+
     @Nullable
     private SelectionTracker<Long> selectionTracker;
 
-    public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
+    public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options, Context context) { //04.13 매개변수 추가 -> items 삭제
         super(options);
         setHasStableIds(true); // Id를 이용해 아이디를 식별하겠다고 알려줌
+        this.context = context;
 
     }
+
+    public void toggleSelection(int pos) {
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+        }
+        else {
+            selectedItems.put(pos, true);
+        }
+        notifyItemChanged(pos);
+    }
+
+    public void clearSelections() {
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
+
 
     @Override
     public long getItemId(int position) {
@@ -76,11 +103,11 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
             );
             //여기서도 selectionTracker을 정의해줘서 뭐가 일어날지 지정해줌
             holder.setSelectionTracker(selectionTracker);
+            if(selectionTracker.isSelected(Long.valueOf(position))){ //현 position의 뷰가 선택되어있으면
 
-            //이건 걍 내가 써본거 선택되어있으면 실행할것
-            if(selectionTracker.isSelected(holder.getItemDetails().getSelectionKey())){
-                Log.d("셀렉션", "선택된건" + holder.getItemDetails());
             }
+
+
         }
 
     //여기서 setSelectionTracker 정의해주는건 전달해주는거

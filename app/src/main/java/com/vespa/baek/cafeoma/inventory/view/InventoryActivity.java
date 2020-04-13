@@ -68,7 +68,7 @@ public class InventoryActivity extends AppCompatActivity {
                 .build();
 
         //^InventoryAdapter로 옮긴부분^ 04.13
-        adapter = new InventoryAdapter(options);
+        adapter = new InventoryAdapter(options,);
 
         //위치 일로 옮겨봄
         layoutManager = new LinearLayoutManager(this);
