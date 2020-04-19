@@ -8,9 +8,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -18,42 +15,45 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
-import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryViewHolder> {
 
     private ArrayList<Item> items;
-    private SparseBooleanArray selectedItems;
+    private HashMap<Long,Boolean> selectedItems;
     private Context context;
 
     @Nullable
     private SelectionTracker<Long> selectionTracker;
 
-    public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options, Context context) { //04.13 매개변수 추가 -> items 삭제
+    public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options, Context context,ArrayList<Item> items) {
         super(options);
         setHasStableIds(true); // Id를 이용해 아이디를 식별하겠다고 알려줌
         this.context = context;
+        this.items = items;
+        selectedItems = new HashMap<>();
 
     }
 
-    public void toggleSelection(int pos) {
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos);
-        }
-        else {
-            selectedItems.put(pos, true);
-        }
-        notifyItemChanged(pos);
+    public HashMap<Long, Boolean> getSelectedItems() {
+        return selectedItems;
     }
+
+
+//    @Override
+//    public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
+//        super.onChildChanged(type, snapshot, newIndex, oldIndex);
+//
+//    }
 
     public void clearSelections() {
         selectedItems.clear();
@@ -61,19 +61,17 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
     }
 
 
-
     @Override
     public long getItemId(int position) {
-        return position;
+        return super.getItemId(position);
     }
-
 
     @NonNull
         @Override
         public InventoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {  //뷰홀더를 최초로 만들어내는곳 인플레이터활용
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
             Log.d("재고", "인플레이터실행됨");
-            return new InventoryViewHolder(view);
+            return new InventoryViewHolder(view,selectedItems);
         }
 
         @Override
@@ -103,9 +101,9 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
             );
             //여기서도 selectionTracker을 정의해줘서 뭐가 일어날지 지정해줌
             holder.setSelectionTracker(selectionTracker);
-            if(selectionTracker.isSelected(Long.valueOf(position))){ //현 position의 뷰가 선택되어있으면
-
-            }
+//            if(selectionTracker.isSelected(Long.valueOf(position))){ //현 position의 뷰가 선택되어있으면
+//
+//            }
 
 
         }
@@ -113,7 +111,18 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
     //여기서 setSelectionTracker 정의해주는건 전달해주는거
     public void setSelectionTracker(SelectionTracker<Long> selectionTracker) {
         this.selectionTracker = selectionTracker;
-    }
+        }
+
+//    public void deleteItem(HashMap<Long,Boolean> selectedItems, InventoryAdapter adapter) { // 여길 수정해야할듯 position이아니라 selectedItems가 순서랑 stablekey를 갖도록. 그 아이디로 position을 갖고와서 getSnapshot
+//        for(long key : selectedItems.keySet()){
+//            //stableid로 adpater의 position을 얻어오는 방법?
+//            new StableIdKeyProvider()
+//            selectionTracker. -> 의 키 프로바이더를 가져와서 .getPosition(key) 하면 position나옴
+//            adapter.getSnapshots().getSnapshot().getReference().delete(); //와 개기네 근데 이게맞나?
+//        }
+//
+//    }
+
 }
 
 

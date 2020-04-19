@@ -57,7 +57,7 @@
                     android:id="@+id/btn_order"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="30dp"
                     android:text="주문"
                     android:textSize="10dp" />
 
@@ -65,7 +65,7 @@
                     android:id="@+id/tv_quantity"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="5dp" />
 
 

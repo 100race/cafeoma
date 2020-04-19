@@ -1,5 +1,6 @@
 package com.vespa.baek.cafeoma.inventory.adapter;
 
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -7,6 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vespa.baek.cafeoma.R;
+import com.vespa.baek.cafeoma.inventory.data.Item;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,9 +27,10 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder { // 여기에 
     protected TextView tv_remark;
     protected TextView tv_quantity;
     protected Button btn_order;
+    protected HashMap<Long,Boolean> selectedItems;
 
 
-    public InventoryViewHolder(@NonNull View itemView) {
+    public InventoryViewHolder(@NonNull View itemView,HashMap<Long,Boolean> selectedItems) {
         super(itemView);
         this.ll_back = itemView.findViewById(R.id.ll_back);
         this.iv_image = itemView.findViewById(R.id.iv_image);
@@ -31,6 +38,7 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder { // 여기에 
         this.tv_remark = itemView.findViewById(R.id.tv_remark);
         this.tv_quantity = itemView.findViewById(R.id.tv_quantity);
         this.btn_order = itemView.findViewById(R.id.btn_order);
+        this.selectedItems = selectedItems; // 이렇게 전해주는거 맞겠지? 통일되겠지?
 
     }
 
@@ -40,9 +48,12 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder { // 여기에 
             //checkBox.setImageResource(android.R.drawable.checkbox_on_background); 선택되면 바꿀부분 -> 오 진짜 바꿔짐 04.13. 04:29 여기에서 걍 정보를 넣어서 삭제처리나중에 해도될듯?
             tv_name.setText("임시테스트중클릭되었다"); // 화면 뒤로갔다 다시오니 어차피 리사이클러뷰가 파이어스토어에서 불러오는거기때문에 다시 원래이름으로돌아옴 그리고 다시클릭하면 클릭해제됨
             ll_back.setActivated(true);
+            toggleSelection(getItemId());
+
         }else{
             //checkBox.setImageResource(android.R.drawable.checkbox_off_background);
             ll_back.setActivated(false);
+            toggleSelection(getItemId());
         }
     }
 
@@ -61,6 +72,17 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder { // 여기에 
                 return getItemId(); // 뷰홀더의 메서드
             }
         };
+    }
+
+    public void toggleSelection(long itemID) { //stableID를 itemID로 전달해주는모습
+        if (selectedItems.get(itemID)!=null) { //아이템존재하면 지우고
+            selectedItems.remove(itemID);
+
+        }
+        else { //아이템 존재안하면 넣어주기 -> 여기는 true값밖에 넣을일이없음
+            selectedItems.put(itemID, true);
+        }
+        // notifyItemChanged(itemID에 맞는 getAdapterPosition); 어댑터 가져와야돼서 귀찮아짐. 어차피 데베에서 삭제되면 바로 반영되더만
     }
 
 }

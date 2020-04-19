@@ -75,6 +75,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private UploadTask uploadTask;
     private String imageUrl;
+    boolean hasImage;
 
 
 
@@ -90,6 +91,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         //item, itemModel 객체 초기화 안하고 써서 오류남;
         item = new Item();
         itemModel = new ItemModel();
+        hasImage = false;
 
         imageUrl = "";
 
@@ -110,46 +112,71 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-                //저장을 누른 순간 이미지를 storage에 저장할것임
+                //저장을 누른 순간 이미지를 storage에 저장할것임 - > 이미지가 null일경우도 정의
                 //[storage에 이미지 저장]
-                firebaseStorage = FirebaseStorage.getInstance();
-                storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
-                uploadTask = storageRef.putFile(selectedImageUri);
+                if(hasImage==true) {
+                    firebaseStorage = FirebaseStorage.getInstance();
+                    storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
+                    uploadTask = storageRef.putFile(selectedImageUri);
 
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
+                    Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+
+                            // Continue with the task to get the download URL
+                            return storageRef.getDownloadUrl();
                         }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                imageUrl = downloadUri.toString();
+                                Log.d("이미지", imageUrl); //이게 더 나중에 실행되는거같으니까 실행을 여기로 옮겨보자
+                                //여기로이동                    // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
+                                item.setImage(imageUrl); //여기도 유효성검사
+                                if(String.valueOf(et_name.getText())=="") {
+                                    Toast.makeText(ModifyInventoryActivity.this, "재고명은 필수입력 사항입니다.", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    item.setName(String.valueOf(et_name.getText()));
+                                    item.setRemark(String.valueOf((et_remark.getText() == null) ? "" : et_remark.getText()));
+                                    item.setQuantity((et_quantity.getText() == null) ? 0 : Long.parseLong(String.valueOf(et_quantity.getText())));
+                                    item.setShopUrl(String.valueOf((et_shopUrl.getText() == null) ? "" : et_shopUrl.getText()));
 
-                        // Continue with the task to get the download URL
-                        return storageRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Uri downloadUri = task.getResult();
-                            imageUrl = downloadUri.toString();
-                            Log.d("이미지",imageUrl); //이게 더 나중에 실행되는거같으니까 실행을 여기로 옮겨보자
-        //여기로이동                    // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
-                            item.setImage(imageUrl);
-                            item.setName(String.valueOf(et_name.getText()));
-                            item.setRemark(String.valueOf(et_remark.getText()));
-                            item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                            item.setShopUrl(String.valueOf(et_shopUrl.getText()));
+                                    //[firestore에 데이터 저장]
+                                    itemModel.saveItem(item, db);
+                                    hasImage = false;
 
-                            //[firestore에 데이터 저장]
-                            itemModel.saveItem(item,db);
-
+                                    intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
                         }
+                    });
+                }else{
+                    //null데이터가 안들어가게 유효성검사
+                    item.setImage("https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=c3b852d3-22f7-4e42-95b8-bc2f30f092e9");
+                    if(String.valueOf(et_name.getText())=="") { //null이아니라 ""인가?
+                        Toast.makeText(ModifyInventoryActivity.this, "재고명은 필수입력 사항입니다.", Toast.LENGTH_SHORT).show();
+                        break; //break넣어봄
+                    }else{
+                    item.setName(String.valueOf(et_name.getText()));
+                    item.setRemark((String.valueOf(et_remark.getText())=="") ? "" : String.valueOf(et_remark.getText()));
+                    Log.d(TAG,String.valueOf(et_remark.getText()));
+                    item.setQuantity((String.valueOf(et_quantity.getText())=="") ? 0 : Long.parseLong(String.valueOf(et_quantity.getText())));
+                    item.setShopUrl(String.valueOf((et_shopUrl.getText()==null)? "" : et_shopUrl.getText()));
+
+                    //[firestore에 데이터 저장]
+                    itemModel.saveItem(item, db);
+
+                    intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
+                    startActivity(intent);
                     }
-                });
+                }
 
-
-                intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
-                startActivity(intent);
                 break;
             case R.id.btn_cancel:
                 break;
@@ -171,6 +198,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         }
 
     }
+
     //사진촬영/갤러리 선택해 온 결과 받는부분
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -186,6 +214,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                     try{
                         selectedImageUri = data.getData();
                         iv_selectImage.setImageURI(selectedImageUri);
+                        hasImage = true;
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -199,6 +228,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                     galleryAddPic();
                     iv_selectImage.setImageURI(imageUri);
                     selectedImageUri = imageUri;
+                    hasImage = true;
                 }catch (Exception e){
                     e.printStackTrace();
                 }
