@@ -6,6 +6,7 @@ public class Item { //내부 멤버변수를 private로 선언했음 보안을 �
     private long quantity;
     private String remark; // 비고
     private String shopUrl;
+    private String imageName;
 
     public Item(){}
 
@@ -54,5 +55,9 @@ public class Item { //내부 멤버변수를 private로 선언했음 보안을 �
     public void setShopUrl(String shopUrl) {
         this.shopUrl = shopUrl;
     }
+
+    public void setImageName(String imageName) { this.imageName = imageName; }
+
+    public String getImageName() { return imageName; }
 }
 

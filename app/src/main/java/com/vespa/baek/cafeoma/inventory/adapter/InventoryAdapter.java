@@ -6,9 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -16,22 +13,17 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
-import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
+
+
 public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryViewHolder> {
 
-    @Nullable
-    private SelectionTracker<Long> selectionTracker;
 
     public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
         super(options);
-        setHasStableIds(true); // Id를 이용해 아이디를 식별하겠다고 알려줌
 
     }
 
@@ -74,19 +66,10 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
                                                     }
                                                 }
             );
-            //여기서도 selectionTracker을 정의해줘서 뭐가 일어날지 지정해줌
-            holder.setSelectionTracker(selectionTracker);
 
-            //이건 걍 내가 써본거 선택되어있으면 실행할것
-            if(selectionTracker.isSelected(holder.getItemDetails().getSelectionKey())){
-                Log.d("셀렉션", "선택된건" + holder.getItemDetails());
-            }
+            holder.setAdapter(this); // this하면 adapter이 연결되겠지?
         }
 
-    //여기서 setSelectionTracker 정의해주는건 전달해주는거
-    public void setSelectionTracker(SelectionTracker<Long> selectionTracker) {
-        this.selectionTracker = selectionTracker;
-    }
 }
 
 

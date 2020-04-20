@@ -1,37 +1,28 @@
 package com.vespa.baek.cafeoma.inventory.view;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.selection.SelectionPredicates;
-import androidx.recyclerview.selection.SelectionTracker;
-import androidx.recyclerview.selection.StableIdKeyProvider;
-import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.vespa.baek.cafeoma.R;;
 import com.vespa.baek.cafeoma.inventory.adapter.InventoryAdapter;
 import com.vespa.baek.cafeoma.inventory.data.Item;
-import com.vespa.baek.cafeoma.inventory.view.presenter.InventoryDetailsLookUp;
 
 
 public class InventoryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private SelectionTracker<Long> selectionTracker; //private로해도되지?
     private FirebaseFirestore db;
     private InventoryAdapter adapter;
     private Button btn_search;
@@ -43,7 +34,7 @@ public class InventoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory);
+         setContentView(R.layout.activity_inventory);
 
 
         btn_add = findViewById(R.id.btn_add);
@@ -75,8 +66,6 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true); //리사이클러뷰 기존성능강화
         recyclerView.setAdapter(adapter);
-        setupSelectionTracker();
-        adapter.setSelectionTracker(selectionTracker);
         Log.d("재고", "어댑터추가확인");
 
 
@@ -111,17 +100,6 @@ public class InventoryActivity extends AppCompatActivity {
 
         }
 
-    }
-
-    private void setupSelectionTracker(){
-        selectionTracker = new SelectionTracker.Builder<>(
-                "selection_id",
-                recyclerView,
-                new StableIdKeyProvider(recyclerView),
-                new InventoryDetailsLookUp(recyclerView),
-                StorageStrategy.createLongStorage())
-                .withSelectionPredicate(SelectionPredicates.<Long>createSelectAnything()) //제약사항없이 여러개 선택가능하도록 하는것
-                .build();
     }
 }
 

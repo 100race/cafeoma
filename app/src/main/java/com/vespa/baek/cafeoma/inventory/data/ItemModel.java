@@ -2,10 +2,12 @@ package com.vespa.baek.cafeoma.inventory.data;
 
 import android.util.Log;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.vespa.baek.cafeoma.inventory.adapter.InventoryAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,9 +15,9 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 
 public class ItemModel {
+    private FirestoreRecyclerAdapter adpater;
 
     private static final String TAG = "ItemModel";
-    //Map params = new Map<>; 정보를 담아놓을 그릇필요
 
 
     //로그인 된 사용자에 있는 데이터베이스 정보를 가져와서 adapter에 연결해주도록함
@@ -31,12 +33,25 @@ public class ItemModel {
 
     //수정 - 롱클릭 한 뷰에서 position을 받아내고, 그 뷰의 text에서 getText등으로 이름?을 받던지 정보를 받아 DB에서 검색해서 그 정보를 퍼블릭 로컬정보에 저장.
     //한마디로 롱클릭한 뷰의 정보를 저장해놓는다
+    public void editItem(Item item,FirebaseFirestore db, String documentId){
+        Map<String, Object> map = new HashMap<>();
+        if(item.getImage()!=""){ // 이미지를 넣었을 경우에만. 안넣었으면 map에 image관련을 안넣고 update는 나머지만 하도록
+        map.put("image", item.getImage());
+        map.put("imageName",item.getImageName());
+        }
+        map.put("name", item.getName());
+        map.put("remark", item.getRemark());
+        map.put("quantity", item.getQuantity());
+        map.put("shopUrl",item.getShopUrl());
+        //임시경로
+        db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem")
+                .document(documentId).update(map);
+    }
 
-    //수정 - 저장한 정보를 수정 액티비티로 넘겨줌 또는 수정액티비티에서 이 정보에 접근하도록 설정. 수정액티비티에서 저장, 취소, 뒤로가기 누르면 로컬 정보 삭제하기
-
-    //삭제 - 나중에
-    public void deleteItem() {
-
+    //삭제 - storage에 저장된 사진도 지워야함 @@@@@@@@@@@@@@@@@@@@@
+    public void deleteItem(InventoryAdapter adapter, int position) {
+        this.adpater = adapter;
+        adapter.getSnapshots().getSnapshot(position).getReference().delete();
     }
 
 
@@ -47,6 +62,7 @@ public class ItemModel {
     public void saveItem(Item item, FirebaseFirestore db) {
         Map<String, Object> map = new HashMap<>();
         map.put("image", item.getImage());
+        map.put("imageName",item.getImageName())
         map.put("name", item.getName());
         map.put("remark", item.getRemark());
         map.put("quantity", item.getQuantity());
