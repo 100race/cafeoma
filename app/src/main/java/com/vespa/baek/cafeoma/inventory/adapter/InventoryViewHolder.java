@@ -71,7 +71,6 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder implements View
                 case 1002:
                     new ItemModel().deleteItem(adapter,getAdapterPosition());
                     adapter.notifyItemRemoved(getAdapterPosition());
-
                     break;
             }
             return true;

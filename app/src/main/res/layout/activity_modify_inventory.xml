@@ -92,6 +92,7 @@
         android:layout_marginEnd="63dp"
         android:layout_marginStart="23dp"
         android:layout_marginTop="84dp"
+        android:hint="필수입력사항"
         app:layout_constraintBottom_toTopOf="@+id/et_quantity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_n"

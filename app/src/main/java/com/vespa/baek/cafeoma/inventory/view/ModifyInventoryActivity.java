@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,7 @@ import java.util.Objects;
 public class ModifyInventoryActivity extends AppCompatActivity {
 
     private final String TAG = "permission";
+    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=68f74b65-2041-4dd7-b0a7-c6a20c33b8ee";
     private final int GET_GALLERY_IMAGE = 200;
     private final int CAMERA_IMAGE = 201;
 
@@ -85,6 +87,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
 
     private boolean isModify;
     private boolean hasImage;
+    private boolean isDefault;
     private String documentId;
 
 
@@ -97,6 +100,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         //추가 버튼으로 눌려왔으면 빈액티비티로 시작함 - 이미지 없는상태
         isModify = false;
         hasImage = false;
+        isDefault = false;
 
         db = FirebaseFirestore.getInstance();
 
@@ -116,8 +120,8 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         btn_save = findViewById(R.id.btn_save);
         btn_cancel = findViewById(R.id.btn_cancel);
 
-        //시작시 수정버튼으로 시작했으면 받아온 데이터 뿌려주는 초기화
-        if (intent != null) {
+        //시작시 수정버튼으로 시작했으면(intent로 getExtra했는데 null이아니라 받아온게있으먄, 왜냐면 intent는 둘다 전해줌) 받아온 데이터 뿌려주는 초기화
+        if (intent.getExtras() != null || isModify == true) {
             //수정버튼으로 받아온 어댑터에존재하는 문서의 아이디
             isModify = true;
             documentId = intent.getExtras().getString("ID");
@@ -131,7 +135,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
-                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData()); //제대로 원래이미지 뜸
                                     Map<String, Object> map = document.getData();
 
                                     if (map.get("image")!=null) {
@@ -161,121 +165,16 @@ public class ModifyInventoryActivity extends AppCompatActivity {
 
     }
 
-    //[storage에 이미지 저장]
-    //selectedImageUri가 null이아니고(이미지를 바꿨고) 수정으로 실행된 것일 때 -> 사진 올리고 기존 데이터에 수정
-    //selectedImageUri가 null이고(이미지를 안바꿨고) 수정으로 실행된 것일 때 -> 기존 데이터->ID로 접근하면될듯? 에 수정
-    //selectedImageUri가 null이아니고(이미지 추가했고) 추가로 실행된 것일 때 ->이대로
-    //selectedImageUri가 null이고 (이미지를 추가안했고) 추가로 실행된 것일 때 -> null데이터 들어갈 시 기본이미지로 설정(깃허브)
-
-    public void onAddModify() {  // 기본 데이터 null확인도 해야됨 일단 지금은 이미지 null부터 처리
-        if (isModify == true) { // 기존 재고 수정 - 더 실행되는 메서드를 먼저해야지
-            if (hasImage == true) { // 이미지를 추가했을 때
-                firebaseStorage = FirebaseStorage.getInstance();
-                storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
-                uploadTask = storageRef.putFile(selectedImageUri);
-
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-
-                        // Continue with the task to get the download URL
-                        return storageRef.getDownloadUrl();
-
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
-                            Uri downloadUri = task.getResult();
-                            imageUrl = downloadUri.toString();
-//                            Log.d("이미지",imageUrl);
-
-                            item.setImage(imageUrl);
-                            item.setName(String.valueOf(et_name.getText()));
-                            item.setRemark(String.valueOf(et_remark.getText()));
-                            item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                            item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-
-                            //[firestore에 데이터 저장]
-                            itemModel.editItem(item,db,documentId);
-
-                        }
-                    }
-                });
-            } else { // 이미지 추가안했을 때
-                item.setImage("");
-                item.setName(String.valueOf(et_name.getText()));
-                item.setRemark(String.valueOf(et_remark.getText()));
-                item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-
-                //[firestore에 데이터 저장]
-                itemModel.editItem(item,db,documentId);
-            }
-        } else { // 새 재고 추가
-            if (hasImage == true) { // 이미지를 추가했을 때
-
-                firebaseStorage = FirebaseStorage.getInstance();
-                storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
-                uploadTask = storageRef.putFile(selectedImageUri);
-
-                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-
-                        // Continue with the task to get the download URL
-                        return storageRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
-                            Uri downloadUri = task.getResult();
-                            imageUrl = downloadUri.toString();
-//                            Log.d("이미지",imageUrl);
-
-                            item.setImage(imageUrl);
-                            item.setName(String.valueOf(et_name.getText()));
-                            item.setRemark(String.valueOf(et_remark.getText()));
-                            item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                            item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-
-                            //[firestore에 데이터 저장]
-                            itemModel.saveItem(item,db);
-
-                        }
-                    }
-                });
-            } else { // 이미지 추가안했을 때 -> 위에 케이스랑 합칠 수 있을 듯
-                item.setImage("https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=c3b852d3-22f7-4e42-95b8-bc2f30f092e9");
-                item.setName(String.valueOf(et_name.getText()));
-                item.setRemark(String.valueOf(et_remark.getText()));
-                item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
-                item.setShopUrl(String.valueOf(et_shopUrl.getText()));
-
-                //[firestore에 데이터 저장]
-                itemModel.saveItem(item,db);
-            }
-
-        }
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save:
-
+                if(TextUtils.isEmpty(et_name.getText().toString())){
+                    Toast.makeText(this,"재고 이름은 필수입력사항입니다.",Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 onAddModify();
                 isModify = false;
-                intent = new Intent(ModifyInventoryActivity.this, InventoryActivity.class);
-                startActivity(intent);
+                finish();
                 break;
 
             case R.id.btn_cancel:
@@ -298,6 +197,123 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         }
 
     }
+
+    //[데이터 유효성 검사 후 item에 데이터넣어주기]
+    //name은 필수입력사항이라 넘어가면안되고 나머지는 0이나 ""로 데이터 넣어주기 (null로는 전달않기)
+    public void onSetItem() {
+        item.setName(String.valueOf(et_name.getText()));
+        item.setRemark(String.valueOf(et_remark.getText()));
+        if(et_quantity.getText().length() <= 0) {
+            item.setQuantity(0);
+        }else {
+            item.setQuantity(Long.parseLong(String.valueOf(et_quantity.getText())));
+        }
+        item.setShopUrl(String.valueOf(et_shopUrl.getText()));
+
+    }
+
+
+    //[storage에 이미지 저장]
+    //selectedImageUri가 null이아니고(이미지를 바꿨고) 수정으로 실행된 것일 때 -> 사진 올리고 기존 데이터에 수정
+    //selectedImageUri가 null이고(이미지를 안바꿨고) 수정으로 실행된 것일 때 -> 기존 데이터->ID로 접근하면될듯? 에 수정
+    //selectedImageUri가 null이아니고(이미지 추가했고) 추가로 실행된 것일 때 ->이대로
+    //selectedImageUri가 null이고 (이미지를 추가안했고) 추가로 실행된 것일 때 -> null데이터 들어갈 시 기본이미지로 설정(깃허브)
+
+    //이미지추가 - 수정 / 추가
+    //이미지 추가 x - 수정 / 추가
+
+    public void onAddModify() {  // 기본 데이터 null확인도 해야됨
+        if (hasImage == true) { // 이미지를 추가했을 때 - 1이랑 4 합칠거임
+            firebaseStorage = FirebaseStorage.getInstance();
+            storageRef = firebaseStorage.getReference().child(selectedImageUri.getLastPathSegment());
+            uploadTask = storageRef.putFile(selectedImageUri);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return storageRef.getDownloadUrl();
+
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        // 성공했을 경우에 업로드한 것의 다운로드 url을 가져온다
+                        Uri downloadUri = task.getResult();
+                        imageUrl = downloadUri.toString();
+
+                        item.setImage(imageUrl);
+
+                        onSetItem();
+
+                        //[firestore에 데이터 저장] - 수정/추가 구분
+                        if (isModify == true) { //"수정" 버튼
+                            Log.d(TAG, "경우 1 실행됨");
+                            itemModel.editItem(item, db, documentId, true, false);
+                        } else { //"추가" 버튼
+                            Log.d(TAG, "경우 4 실행됨");
+                            itemModel.saveItem(item, db);
+                        }
+
+                    }
+                }
+            });
+        } else { //이미지 추가 안했을때 - 2 3 5 합침
+
+            onSetItem();
+
+            //[firestore에 데이터 저장]
+            if (isModify == false) { //이미지 추가 안하고 "추가"버튼
+                Log.d(TAG, "경우 5 실행됨");
+                item.setImage(defaultImage);
+                itemModel.saveItem(item, db);
+            } else{
+                if (isDefault == false) { // 이미지 추가는 안했는데 - 기존에 쓰던 이미지로 하고싶을 때 "수정"버튼
+                    Log.d(TAG, "경우 2 실행됨");
+                    itemModel.editItem(item, db, documentId, false, false);
+                } else { // 이미지 없었어도 기존에 이미지 있었어도 디폴트 이미지로 바꾸고싶을때 "수정"버튼
+                    Log.d(TAG, "경우 3 실행됨");
+                    item.setImage(defaultImage);
+                    itemModel.editItem(item, db, documentId, false, true);
+                }
+            }
+
+        }
+    }
+
+
+    //사진촬영할지 갤러리에서 가져올 지 기본이미지를 할지 선택
+    private void photoDialogRadio() {
+        final CharSequence[] PhotoModels = {"사진 촬영", "갤러리에서 가져오기","기본이미지"};
+        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
+        alt_builder.setTitle("사진 가져오기");
+        alt_builder.setSingleChoiceItems(PhotoModels, -1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == 0) { //사진촬영
+                    takePhoto();//사진촬영메서드
+                    alert.dismiss(); // 끝나고 돌아오면 창꺼주기
+                } else if (item == 1) { //갤러리에서 가져오기
+                    intent = new Intent(Intent.ACTION_PICK);
+                    intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intent, GET_GALLERY_IMAGE);
+                    alert.dismiss();
+                } else if (item == 2) { // 기본이미지로 설정
+                    iv_selectImage.setImageResource(android.R.drawable.ic_menu_gallery);
+                    hasImage = false;
+                    isDefault = true;
+                    alert.dismiss();
+                }
+            }
+        });
+        alert = alt_builder.create();
+        alert.show();
+    }
+
     //사진촬영/갤러리 선택해 온 결과 받는부분
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -352,27 +368,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         }
     }
 
-//사진촬영할지 갤러리에서 가져올 지 선택
-    private void photoDialogRadio() {
-        final CharSequence[] PhotoModels = {"사진 촬영", "갤러리에서 가져오기"};
-        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
-        alt_builder.setTitle("사진 가져오기");
-        alt_builder.setSingleChoiceItems(PhotoModels, -1, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == 0) { //사진촬영
-                    takePhoto();//사진촬영메서드
-                    alert.dismiss(); // 끝나고 돌아오면 창꺼주기
-                } else if (item == 1) { //갤러리에서 가져오기
-                    intent = new Intent(Intent.ACTION_PICK);
-                    intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intent, GET_GALLERY_IMAGE);
-                    alert.dismiss();
-                }
-            }
-        });
-        alert = alt_builder.create();
-        alert.show();
-    }
+
 
     //사진 찍기 클릭시 이벤트
     public void takePhoto(){

@@ -20,6 +20,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryViewHolder> {
+    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=68f74b65-2041-4dd7-b0a7-c6a20c33b8ee";
 
 
     public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options) {
@@ -47,6 +48,10 @@ public class InventoryAdapter extends FirestoreRecyclerAdapter<Item, InventoryVi
             if (model.getImage() != null) {
                 Glide.with(holder.itemView)
                         .load(model.getImage())
+                        .into(holder.iv_image);
+            }else{
+                Glide.with(holder.itemView)
+                        .load(defaultImage)
                         .into(holder.iv_image);
             }
             holder.tv_name.setText(model.getName()); //현재 이 model은 Item 타입임
