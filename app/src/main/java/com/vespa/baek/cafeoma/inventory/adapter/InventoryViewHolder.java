@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.firestore.ObservableSnapshotArray;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.ItemModel;
 import com.vespa.baek.cafeoma.inventory.view.ModifyInventoryActivity;
@@ -43,9 +44,7 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder implements View
 
     }
 
-    public void setAdapter(InventoryAdapter adapter) {
-        this.adapter = adapter;
-    }
+    public void setAdapter(InventoryAdapter adapter) { this.adapter = adapter; }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -64,6 +63,8 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder implements View
                     //여기서 가져온 데이터를 intent로 넘겨줌 position넘기고 데이터는 직접통신하는게 빠를듯
                     context = getApplicationContext();
                     Intent intent = new Intent(context, ModifyInventoryActivity.class);
+                    //여기서 getAdapterPosition으로 현재 뷰에 띄워져있는 위치 기반으로 데이터가 넘어가는듯
+                   // adapter.getSnapshots //->ObservableSnapshotArray 이게 return 된다고하거든?
                     intent.putExtra("ID",adapter.getSnapshots().getSnapshot(getAdapterPosition()).getReference().getId());
                     context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     break;

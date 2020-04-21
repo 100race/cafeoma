@@ -12,19 +12,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.vespa.baek.cafeoma.inventory.adapter.InventoryAdapter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 
 public class ItemModel {
-    private FirestoreRecyclerAdapter adpater;
+    private InventoryAdapter adpater;
 
     private static final String TAG = "ItemModel";
-    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=68f74b65-2041-4dd7-b0a7-c6a20c33b8ee";
+    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=194f1560-84c2-420c-98f0-2bd8c78dcd2d";
 
 
     //로그인 된 사용자에 있는 데이터베이스 정보를 가져와서 adapter에 연결해주도록함
@@ -36,6 +39,28 @@ public class ItemModel {
     //검색 - 입력받은 재고명, 수량에 맞는 정보를 db에서 찾아 불러온다
     public void searchItem() {
 
+    }
+
+    // 아이템 리스트를 저장
+    public ArrayList<Item> getItemList(FirebaseFirestore db, String InventoryID){ // 컬렉션아이디로 나중엔 받아오기 수정해야될부분 DocumentReference docRef로 받아올까 아니면 db로 받을까
+        ArrayList<Item> items= new ArrayList<>();
+
+        db.collection("Inventory").document(InventoryID).collection("InventoryItem")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Item item = document.toObject(Item.class);
+                        items.add(item);
+                        Log.d(TAG, document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+        return items;
     }
 
     //수정
@@ -85,7 +110,7 @@ public class ItemModel {
         }, 2000);
     }
 
-    //삭제 - firebase 와 firestore 둘 다 삭제
+    //삭제 - storage 와 firestore 둘 다 삭제
     public void deleteItem(InventoryAdapter adapter, int position) {
         this.adpater = adapter;
         DocumentSnapshot snapshot = adapter.getSnapshots().getSnapshot(position);

@@ -57,7 +57,7 @@ import java.util.Objects;
 public class ModifyInventoryActivity extends AppCompatActivity {
 
     private final String TAG = "permission";
-    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=68f74b65-2041-4dd7-b0a7-c6a20c33b8ee";
+    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=194f1560-84c2-420c-98f0-2bd8c78dcd2d";
     private final int GET_GALLERY_IMAGE = 200;
     private final int CAMERA_IMAGE = 201;
 
