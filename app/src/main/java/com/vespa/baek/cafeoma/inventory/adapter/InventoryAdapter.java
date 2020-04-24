@@ -18,6 +18,9 @@ import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.annotation.NonNull;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -25,8 +28,9 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,InventoryViewHolder> {
-    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=194f1560-84c2-420c-98f0-2bd8c78dcd2d";
+    private final static String defaultImage = "";
     private Context context;
+
 
 
     public InventoryAdapter(@NonNull FirestoreRecyclerOptions<Item> options, Context context) {
@@ -42,11 +46,21 @@ public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,In
     }
 
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+//    @Override //여기 말고 리스트 있는 어댑터에서 구현해봐야게사다
+//    public long getItemId(int position) {
+//
+//        return itemId;
+//    }
 
+    //여기서 아예 position에 따른 db의 document id를 가져와버리면 되지않을까?
+    public int getFilteredPos(int position) {
+        ArrayList<Integer> filteredIndex = getFilteredIndex();
+        int filteredPos = filteredIndex.get(position);
+        Log.d("filteredPos:",String.valueOf(filteredIndex.get(position)));
+        //String itemId = this.getSnapshots().getSnapshot(filteredPos).getReference().getId(); //
+        return filteredPos;
+    }
+    //documentid를 바로 가져오게 할수도있음
 
 
     @NonNull
@@ -59,14 +73,14 @@ public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,In
 
     @Override
     protected void onBindViewHolder(@NonNull InventoryViewHolder holder, int position, @NonNull Item model) {  // 각 아이템에 대한 매칭을 하는것
-        //이미지를 받아와서 이미지뷰에 넣어주는 모습 . null일 경우 디폴트 이미지 그대로 출력된다.
-        if (model.getImage() != null) {
+        //이미지를 받아와서 이미지뷰에 넣어주는 모습 . null일 경우 default이미지로 출력된다
+        if (model.getImage() != null && model.getImage()!=defaultImage) {
             Glide.with(holder.itemView)
                     .load(model.getImage())
                     .into(holder.iv_image);
         } else {
             Glide.with(holder.itemView)
-                    .load(defaultImage)
+                    .load(R.drawable.default_image_icon)
                     .into(holder.iv_image);
         }
         holder.tv_name.setText(model.getName()); //현재 이 model은 Item 타입임

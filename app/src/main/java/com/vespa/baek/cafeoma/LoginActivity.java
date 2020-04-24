@@ -257,8 +257,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() { //일단 시작이 LoginActivity일 때
         super.onStart();
-        // 시작시 로그인 한 계정있나 확인 - 페북구글공통
+        // 시작시 로그인 한 계정있나 확인 - 페북구글공통 확인 후 로그인 돼있으면 메인으로 넘겨줌
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 

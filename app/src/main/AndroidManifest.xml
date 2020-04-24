@@ -12,7 +12,8 @@
 
         <activity android:name=".inventory.view.ModifyInventoryActivity"></activity>
         <activity android:name=".inventory.view.InventoryActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            >
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

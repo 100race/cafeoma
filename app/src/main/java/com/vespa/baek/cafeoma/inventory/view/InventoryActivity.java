@@ -82,7 +82,6 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true); //리사이클러뷰 기존성능강화
         recyclerView.setAdapter(adapter);
-
         et_search.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -110,14 +109,13 @@ public class InventoryActivity extends AppCompatActivity {
 
     //onCreate끝
 
-    //viewholder - > ^InventoryViewHolder^로 옮긴부분 04.13
-
 
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening(); // 어댑터가 stopListening(?)할수잇게게
     }
+
 
     @Override
     protected void onStart() {
@@ -130,7 +128,6 @@ public class InventoryActivity extends AppCompatActivity {
             case R.id.btn_add:
                 Intent intent = new Intent(InventoryActivity.this, ModifyInventoryActivity.class);
                 startActivity(intent);
-               // finish();  여기서 finish()를 빨리해버리면... 좀이상해지는거같음
                 break;
             case R.id.btn_search:
            //     String searchText = String.valueOf(et_search.getText()); 일단 아직 쓸일이없음
@@ -143,8 +140,8 @@ public class InventoryActivity extends AppCompatActivity {
 
     }
 
-    public void searchItem(String searchText){
-         adapter.getFilter().filter(searchText);
+//    public void searchItem(String searchText){
+//         adapter.getFilter().filter(searchText);
 //        CollectionReference collectionref = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem");
 //        //Query query = collectionref.whereEqualTo("name", searchText);
 //        Query query = collectionref.orderBy("name").startAt(searchText).endAt(searchText+"\uf8ff");
@@ -152,13 +149,13 @@ public class InventoryActivity extends AppCompatActivity {
 //        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
 //                .setQuery(query, Item.class)
 //                .build();
-
+//
 //        adapter = new InventoryAdapter(options,this);
-
-        //recyclerView.setAdapter(adapter); onCreate 아닌곳에서 setAdapter하려고하면 안되나봄..?
-        adapter.notifyDataSetChanged();
-        //뿌려줬다가도 뒤로버튼을 누르면 다시 원래 어댑터, 원래 옵션 쿼리로 작동하도록 설정해야됨
-        }
+//
+//        recyclerView.setAdapter(adapter); onCreate 아닌곳에서 setAdapter하려고하면 안되나봄..?
+//        adapter.notifyDataSetChanged();
+//        //뿌려줬다가도 뒤로버튼을 누르면 다시 원래 어댑터, 원래 옵션 쿼리로 작동하도록 설정해야됨
+//        }
 
     private static class newLinearLayoutManager extends LinearLayoutManager {
         /**

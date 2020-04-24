@@ -57,7 +57,7 @@ import java.util.Objects;
 public class ModifyInventoryActivity extends AppCompatActivity {
 
     private final String TAG = "permission";
-    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=194f1560-84c2-420c-98f0-2bd8c78dcd2d";
+    private final static String defaultImage = "";
     private final int GET_GALLERY_IMAGE = 200;
     private final int CAMERA_IMAGE = 201;
 
@@ -138,9 +138,13 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                                     Log.d(TAG, "DocumentSnapshot data: " + document.getData()); //제대로 원래이미지 뜸
                                     Map<String, Object> map = document.getData();
 
-                                    if (map.get("image")!=null) {
-                                        Glide.with(getApplicationContext()) //이거넣는게맞는지모르겠음
+                                    if ((map.get("image") != null) && (map.get("image") != defaultImage)) { //원래 넣었던 이미지가 있었다면
+                                        Glide.with(getApplicationContext())
                                                 .load(String.valueOf(map.get("image")))
+                                                .into(iv_selectImage);
+                                    } else { //원래 넣었던 이미지가 없었다면 갤러리이미지 출력
+                                        Glide.with(getApplicationContext())
+                                                .load(android.R.drawable.ic_menu_gallery)
                                                 .into(iv_selectImage);
                                     }
                                     et_name.setText(String.valueOf(map.get("name")));

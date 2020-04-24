@@ -27,7 +27,7 @@ public class ItemModel {
     private InventoryAdapter adpater;
 
     private static final String TAG = "ItemModel";
-    private final static String defaultImage = "https://firebasestorage.googleapis.com/v0/b/cafeoma.appspot.com/o/default-image-icon-14.png?alt=media&token=194f1560-84c2-420c-98f0-2bd8c78dcd2d";
+    private final static String defaultImage = "";
 
 
     //로그인 된 사용자에 있는 데이터베이스 정보를 가져와서 adapter에 연결해주도록함
@@ -117,12 +117,14 @@ public class ItemModel {
         String image = String.valueOf(snapshot.get("image"));
         //URL로 받은 이미지를 firestore에서 삭제 후 필드도 같이 삭제
         //image가 default이미지가 아닐 때 삭제. default이미지면 삭제 x
-        if (image != null && image != defaultImage  ){
+        if (image != null && image != defaultImage){
             FirebaseStorage storage = FirebaseStorage.getInstance();
             storage.getReferenceFromUrl(image).delete();
          }
 
-        adapter.getSnapshots().getSnapshot(position).getReference().delete();
+        snapshot.getReference().delete();
+        //adapter.getSnapshots().getSnapshot(position).getReference().delete();
+
     }
 
 

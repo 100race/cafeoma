@@ -2,6 +2,7 @@ package com.vespa.baek.cafeoma.inventory.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.ObservableSnapshotArray;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.ItemModel;
 import com.vespa.baek.cafeoma.inventory.view.ModifyInventoryActivity;
@@ -59,19 +62,25 @@ public class InventoryViewHolder extends RecyclerView.ViewHolder implements View
         public boolean onMenuItemClick(MenuItem item) {
 
             switch (item.getItemId()) {
-                case 1001:
+                case 1001: //수정
                     //여기서 가져온 데이터를 intent로 넘겨줌 position넘기고 데이터는 직접통신하는게 빠를듯
                     context = getApplicationContext();
                     Intent intent = new Intent(context, ModifyInventoryActivity.class);
                     //여기서 getAdapterPosition으로 현재 뷰에 띄워져있는 위치 기반으로 데이터가 넘어가는듯
                    // adapter.getSnapshots //->ObservableSnapshotArray 이게 return 된다고하거든?
-                    intent.putExtra("ID",adapter.getSnapshots().getSnapshot(getAdapterPosition()).getReference().getId());
+                    //문제는 이 getAdapterPosition이 현재 뷰에 뿌려져있는걸 전달하는게 아니라서 애초에 ID고뭐고 받을수가없는거같음
+                    //오류 : 그냥 클릭했을 때 getFilteredPos에서 null접근해서 오류남 -> getFilteredPos 에서 처리해줘서 nullPointerException 안일어남
+                   intent.putExtra("ID",adapter.getSnapshots().getSnapshot(adapter.getFilteredPos(getAdapterPosition())).getReference().getId());
+                    Log.d("ViewHolderIndex", String.valueOf(adapter.getFilteredPos(getAdapterPosition())));
+                    //여기서 getAdapterPosition 이 원래 포지션으로 들어감
                     context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     break;
 
-                case 1002:
-                    new ItemModel().deleteItem(adapter,getAdapterPosition());
-                    adapter.notifyItemRemoved(getAdapterPosition());
+                case 1002: //삭제
+                    //얘는 같이 filteredPos로 수정안해줬는데 왜 잘됨?? 이 삭제메서드는 filterable 어댑터에 구현이 돼있거든 list.remove가? 거기서 자꾸 오류남
+                    //여기서 수정처럼 snapshot을 같이 찍어봄. ItemModel에서말고
+                    new ItemModel().deleteItem(adapter,adapter.getFilteredPos(getAdapterPosition()));
+                    adapter.notifyItemRemoved(adapter.getFilteredPos(getAdapterPosition()));
                     break;
             }
             return true;
