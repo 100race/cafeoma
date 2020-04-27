@@ -258,7 +258,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                         //[firestore에 데이터 저장] - 수정/추가 구분
                         if (isModify == true) { //"수정" 버튼
                             Log.d(TAG, "경우 1 실행됨");
-                            itemModel.editItem(item, db, documentId, true, false);
+                            itemModel.updateItem(item, db, documentId, true, false);
                         } else { //"추가" 버튼
                             Log.d(TAG, "경우 4 실행됨");
                             itemModel.saveItem(item, db);
@@ -279,11 +279,11 @@ public class ModifyInventoryActivity extends AppCompatActivity {
             } else{
                 if (isDefault == false) { // 이미지 추가는 안했는데 - 기존에 쓰던 이미지로 하고싶을 때 "수정"버튼
                     Log.d(TAG, "경우 2 실행됨");
-                    itemModel.editItem(item, db, documentId, false, false);
+                    itemModel.updateItem(item, db, documentId, false, false);
                 } else { // 이미지 없었어도 기존에 이미지 있었어도 디폴트 이미지로 바꾸고싶을때 "수정"버튼
                     Log.d(TAG, "경우 3 실행됨");
                     item.setImage(defaultImage);
-                    itemModel.editItem(item, db, documentId, false, true);
+                    itemModel.updateItem(item, db, documentId, false, true);
                 }
             }
 

@@ -36,35 +36,9 @@ public class ItemModel {
     }
 
     //[InventoryActivity]
-    //검색 - 입력받은 재고명, 수량에 맞는 정보를 db에서 찾아 불러온다
-    public void searchItem() {
-
-    }
-
-    // 아이템 리스트를 저장
-    public ArrayList<Item> getItemList(FirebaseFirestore db, String InventoryID){ // 컬렉션아이디로 나중엔 받아오기 수정해야될부분 DocumentReference docRef로 받아올까 아니면 db로 받을까
-        ArrayList<Item> items= new ArrayList<>();
-
-        db.collection("Inventory").document(InventoryID).collection("InventoryItem")
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Item item = document.toObject(Item.class);
-                        items.add(item);
-                        Log.d(TAG, document.getId() + " => " + document.getData());
-                    }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-        return items;
-    }
 
     //수정
-    public void editItem(Item item,FirebaseFirestore db, String documentId,boolean isChangedImg,boolean isDefaultImg){
+    public void updateItem(Item item,FirebaseFirestore db, String documentId,boolean isChangedImg,boolean isDefaultImg){
         Map<String, Object> map = new HashMap<>();
         if((isChangedImg == false && isDefaultImg) || (isChangedImg && isDefaultImg ==false)){ // 기존 이미지 storage 삭제 -> 이미지를 1. 다른 사진이나 2. 디폴트이미지로 바꾸고 싶을때
             DocumentReference docref = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").document(documentId);
@@ -162,16 +136,6 @@ public class ItemModel {
 
     }
 
-
-    //    query에 넣어 (firestore?)adapter에 넣어준다. -> adapter은 실시간으로 변해주기때문에 걍 데이터만 바꿔도 될듯? 리스너가 알아서 존재하니까
-//    public void pushItam() {
-//
-//    }
-
-    //query에 넣어 원래 선택했던 재고정보를 찾아 거기에 정보를 update함.
-    public void updateItem() {
-
-    }
 
 
 }

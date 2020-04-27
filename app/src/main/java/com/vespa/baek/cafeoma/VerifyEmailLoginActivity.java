@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -54,6 +55,9 @@ public class VerifyEmailLoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } else {
                                 Log.e("LOGIN", "이메일 링크로 로그인 실패", task.getException());
+                                Toast.makeText(getApplicationContext(), "만료된 링크입니다", Toast.LENGTH_SHORT);
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(intent);
                             }
                         }
                     });

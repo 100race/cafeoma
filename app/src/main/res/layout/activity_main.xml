@@ -9,9 +9,11 @@
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="299dp"
-        android:layout_height="59dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="109dp"
+        android:layout_marginTop="38dp"
         android:text="logout"
-        app:layout_constraintBottom_toTopOf="@+id/btn_toInventory"
+        app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,6 +28,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.243"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+
+    <Button
+        android:id="@+id/btn_delCollection"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="477dp"
+        android:text="컬렉션삭제"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
+        app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
         app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
 
 

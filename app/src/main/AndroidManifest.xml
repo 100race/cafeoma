@@ -9,18 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".inventory.view.ModifyInventoryActivity"></activity>
-        <activity android:name=".inventory.view.InventoryActivity"
-            android:windowSoftInputMode="adjustPan"
-            >
-
+        <activity android:name=".main.view.InputInvenIdActivity"></activity>
+        <activity android:name=".inventory.view.ModifyInventoryActivity" />
+        <activity
+            android:name=".inventory.view.InventoryActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
             </intent-filter>
-
-
         </activity>
         <activity android:name=".NotifyEmailSendActivity" />
         <activity android:name=".VerifyEmailLoginActivity">
@@ -62,6 +58,13 @@
             </intent-filter>
         </activity>
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.vespa.baek.cafeoma.provider"
@@ -71,21 +74,15 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
-        <meta-data android:name="android.max_aspect" android:value="2.1" />
     </application>
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
 
-
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

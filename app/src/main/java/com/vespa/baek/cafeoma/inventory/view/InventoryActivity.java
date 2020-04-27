@@ -140,23 +140,6 @@ public class InventoryActivity extends AppCompatActivity {
 
     }
 
-//    public void searchItem(String searchText){
-//         adapter.getFilter().filter(searchText);
-//        CollectionReference collectionref = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem");
-//        //Query query = collectionref.whereEqualTo("name", searchText);
-//        Query query = collectionref.orderBy("name").startAt(searchText).endAt(searchText+"\uf8ff");
-//
-//        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
-//                .setQuery(query, Item.class)
-//                .build();
-//
-//        adapter = new InventoryAdapter(options,this);
-//
-//        recyclerView.setAdapter(adapter); onCreate 아닌곳에서 setAdapter하려고하면 안되나봄..?
-//        adapter.notifyDataSetChanged();
-//        //뿌려줬다가도 뒤로버튼을 누르면 다시 원래 어댑터, 원래 옵션 쿼리로 작동하도록 설정해야됨
-//        }
-
     private static class newLinearLayoutManager extends LinearLayoutManager {
         /**
          * Disable predictive animations. There is a bug in RecyclerView which causes views that

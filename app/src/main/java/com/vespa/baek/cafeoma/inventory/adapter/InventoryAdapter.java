@@ -10,16 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.common.ChangeEventType;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -45,12 +41,6 @@ public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,In
         return model.getName().toLowerCase().contains(filterPattern);
     }
 
-
-//    @Override //여기 말고 리스트 있는 어댑터에서 구현해봐야게사다
-//    public long getItemId(int position) {
-//
-//        return itemId;
-//    }
 
     //여기서 아예 position에 따른 db의 document id를 가져와버리면 되지않을까?
     public int getFilteredPos(int position) {

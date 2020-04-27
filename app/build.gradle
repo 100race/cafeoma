@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-dynamic-links:19.1.0'
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     implementation 'com.google.firebase:firebase-firestore:21.4.2'
+    implementation 'com.google.firebase:firebase-functions:19.0.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
     implementation 'com.google.firebase:firebase-auth:19.3.0'
@@ -57,6 +58,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
 
     //구글에서 만들어준 오류를 위한 라이브러리
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'

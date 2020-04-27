@@ -335,5 +335,4 @@ public class LoginActivity extends AppCompatActivity {
 
     //[END auth_with_emaillink
 
-
 }

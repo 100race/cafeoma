@@ -1,11 +1,14 @@
 package com.vespa.baek.cafeoma.main.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
+
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -20,29 +23,56 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.functions.FirebaseFunctions;
 import com.vespa.baek.cafeoma.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
+import com.vespa.baek.cafeoma.main.data.User;
+import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.security.MessageDigest;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private Context mContext;
     private FirebaseAuth mAuth;
     private Button btn_logout;
     private Button btn_toInventory;
+    private AlertDialog alert;
+
+    private FirebaseFirestore db;
+    private UserModel um;
+    private String userUid;
+    private String userEmail;
+
+
+
 
     //뒤로가기버튼관련변수
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
     // 첫 번째 뒤로가기 버튼을 누를때 표시
     private Toast toast;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,19 +83,27 @@ public class MainActivity extends AppCompatActivity {
 
         //initialize auth
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
-        btn_logout = (Button)findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(view->onClick(view));
+        btn_logout = (Button) findViewById(R.id.btn_logout);
+        btn_logout.setOnClickListener(view -> onClick(view));
 
         btn_toInventory = findViewById(R.id.btn_toInventory);
-        btn_toInventory.setOnClickListener(view->onClick(view));
+        btn_toInventory.setOnClickListener(view -> onClick(view));
 
+        //[사용자 추가] 기존 사용자인지 확인 필요. 기존사용자면 추가 x)
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        userEmail = currentUser.getEmail();
+        userUid = currentUser.getUid();
+        Log.d("확인", userEmail); //->잘뜨는데??
 
+        um = new UserModel();
+        um.checkUser(db, userUid, userEmail);
 
 
     }
 
-    //시작시 구글 로그인 확인하는 메서드
+    //[로그인 상태 확인]
     //여기서 currenUser이 null로오면 로그인 액티비티로 넘어가게 해줌
     @Override
     protected void onStart() {
@@ -74,17 +112,12 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
-        } else{ //시작할때 현재 사용자가있으면 데베 있나 확인. 없을 시 최초
-           // String email = currentUser.getEmail();
-            //구현 나중단계에. 일단 리사이클러 뷰 잘 작동하는지부터 확인 하고
         }
 
 
-
-
-
     }
-    //로그인 된 상태에서 뒤로가기 막기
+
+    //[뒤로가기 두번누르면 종료]
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
@@ -107,31 +140,82 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // [로그아웃]
-    public void logOut(){
+
+    // [로그아웃] - 페이스북 로그아웃 제대로 안되는거같기도
+    public void logOut() {
         FirebaseAuth.getInstance().signOut();
         FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
         Log.d("LOGOUT", "로그아웃성공");
         if (currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
         }
     }
 
-    public void onClick(View v){
-        switch(v.getId()) {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btn_logout:
                 logOut();
                 break;
             case R.id.btn_toInventory:
-                Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
-                startActivity(intent);
+                db.collection("User").document(userUid)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.get("inventoryid") != null) {// 연결된 db있으면
+                                        Log.d(TAG, "연결 ivtid :" + document.getData());
+                                        Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                                        startActivity(intent);
+
+                                    } else { // 연결된 db없으면
+                                        Log.d(TAG, "연결 ivtid 없음");
+                                        inventoryDialog();
+                                    }
+                                } else {
+                                    Log.d(TAG, "사용자 문서 가져오기 실패", task.getException());
+                                }
+                            }
+                        });
                 break;
+            case R.id.btn_delCollection:
+                //삭제구현
+                break;
+
         }
     }
 
+    //[재고저장소 선택 다이얼로그]
+    private void inventoryDialog() { //생성할지 기존DBID 입력할지 dialog 띄워줌
 
+        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
+        alt_builder.setTitle("재고저장소 선택");
+        alt_builder.setMessage("재고저장소를 새로 만드시겠습니까?")
+                .setPositiveButton("새로 생성",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { //createDB 하고 InventoryActivity연결
+                                um.createInventory(db,userUid);
+                                Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                                startActivity(intent);
+                                alert.dismiss();
+                            }
+                        })
+                .setNegativeButton("저장소 참여 코드 입력",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {  //inputDbidActivity로 인텐트 연결
+                                Intent intent = new Intent(getApplicationContext(), InputInvenIdActivity.class);
+                                startActivity(intent);
+                                alert.dismiss();
+                            }
+                        });
 
+        alert = alt_builder.create();
+        alert.show();
+    }
 
 
     // [[프로젝트의 해시키를 반환]]
@@ -165,6 +249,91 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //[START delete_collection]
+    /**
+     * Delete all documents in a collection. Uses an Executor to perform work on a background
+     * thread. This does *not* automatically discover and delete subcollections.
+     */
+
+    private Task<Void> deleteCollection(final CollectionReference collection,
+                                        final int batchSize,
+                                        Executor executor) {
+
+        // Perform the delete operation on the provided Executor, which allows us to use
+        // simpler synchronous logic without blocking the main thread.
+        return Tasks.call(executor, new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                // Get the first batch of documents in the collection
+                Query query = collection.orderBy(FieldPath.documentId()).limit(batchSize);
+
+                // Get a list of deleted documents
+                List<DocumentSnapshot> deleted = deleteQueryBatch(query);
+
+                // While the deleted documents in the last batch indicate that there
+                // may still be more documents in the collection, page down to the
+                // next batch and delete again
+                while (deleted.size() >= batchSize) {
+                    // Move the query cursor to start after the last doc in the batch
+                    DocumentSnapshot last = deleted.get(deleted.size() - 1);
+                    query = collection.orderBy(FieldPath.documentId())
+                            .startAfter(last.getId())
+                            .limit(batchSize);
+
+                    deleted = deleteQueryBatch(query);
+                }
+
+                return null;
+            }
+        });
+
+    }
+
+    /**
+     * Delete all results from a query in a single WriteBatch. Must be run on a worker thread
+     * to avoid blocking/crashing the main thread.
+     */
+    @WorkerThread
+    private List<DocumentSnapshot> deleteQueryBatch(final Query query) throws Exception {
+        QuerySnapshot querySnapshot = Tasks.await(query.get());
+
+        WriteBatch batch = query.getFirestore().batch();
+        for (QueryDocumentSnapshot snapshot : querySnapshot) {
+            batch.delete(snapshot.getReference());
+        }
+        Tasks.await(batch.commit());
+
+        return querySnapshot.getDocuments();
+    }
+    // [END delete_collection]
+
+    //트랜잭션실행
+//    public void writeBatch() {
+//        // [START write_batch]
+//        // Get a new write batch
+//        WriteBatch batch = db.batch();
+//
+//        // Set the value of 'NYC'
+//        DocumentReference nycRef = db.collection("cities").document("NYC");
+//        batch.set(nycRef, new City());
+//
+//        // Update the population of 'SF'
+//        DocumentReference sfRef = db.collection("cities").document("SF");
+//        batch.update(sfRef, "population", 1000000L);
+//
+//        // Delete the city 'LA'
+//        DocumentReference laRef = db.collection("cities").document("LA");
+//        batch.delete(laRef);
+//
+//        // Commit the batch
+//        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                // ...
+//            }
+//        });
+        // [END write_batch]
+//    }
 }
 
 
