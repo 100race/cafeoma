@@ -33,11 +33,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.functions.FirebaseFunctions;
+
 import com.vespa.baek.cafeoma.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
@@ -45,24 +41,23 @@ import com.vespa.baek.cafeoma.main.data.User;
 import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.security.MessageDigest;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executor;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private Context mContext;
     private FirebaseAuth mAuth;
-    private Button btn_logout;
-    private Button btn_toInventory;
-    private AlertDialog alert;
-
     private FirebaseFirestore db;
     private UserModel um;
     private String userUid;
     private String userEmail;
 
+    //[View]
+    private Button btn_logout;
+    private Button btn_toInventory;
+    private Button btn_toUserPage;
+    private AlertDialog alert;
 
 
 
@@ -90,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
 
         btn_toInventory = findViewById(R.id.btn_toInventory);
         btn_toInventory.setOnClickListener(view -> onClick(view));
+
+        btn_toUserPage = findViewById(R.id.btn_toUserPage);
+        btn_toUserPage.setOnClickListener(view -> onClick(view));
 
         //[사용자 추가] 기존 사용자인지 확인 필요. 기존사용자면 추가 x)
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -180,8 +178,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 break;
-            case R.id.btn_delCollection:
-                //삭제구현
+            case R.id.btn_toUserPage:
+                Intent intent = new Intent(getApplicationContext(),UserPageActivity.class);
+                startActivity(intent);
                 break;
 
         }
@@ -249,91 +248,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //[START delete_collection]
-    /**
-     * Delete all documents in a collection. Uses an Executor to perform work on a background
-     * thread. This does *not* automatically discover and delete subcollections.
-     */
+    //[유저삭제]
 
-    private Task<Void> deleteCollection(final CollectionReference collection,
-                                        final int batchSize,
-                                        Executor executor) {
 
-        // Perform the delete operation on the provided Executor, which allows us to use
-        // simpler synchronous logic without blocking the main thread.
-        return Tasks.call(executor, new Callable<Void>() {
-            @Override
-            public Void call() throws Exception {
-                // Get the first batch of documents in the collection
-                Query query = collection.orderBy(FieldPath.documentId()).limit(batchSize);
 
-                // Get a list of deleted documents
-                List<DocumentSnapshot> deleted = deleteQueryBatch(query);
-
-                // While the deleted documents in the last batch indicate that there
-                // may still be more documents in the collection, page down to the
-                // next batch and delete again
-                while (deleted.size() >= batchSize) {
-                    // Move the query cursor to start after the last doc in the batch
-                    DocumentSnapshot last = deleted.get(deleted.size() - 1);
-                    query = collection.orderBy(FieldPath.documentId())
-                            .startAfter(last.getId())
-                            .limit(batchSize);
-
-                    deleted = deleteQueryBatch(query);
-                }
-
-                return null;
-            }
-        });
-
-    }
-
-    /**
-     * Delete all results from a query in a single WriteBatch. Must be run on a worker thread
-     * to avoid blocking/crashing the main thread.
-     */
-    @WorkerThread
-    private List<DocumentSnapshot> deleteQueryBatch(final Query query) throws Exception {
-        QuerySnapshot querySnapshot = Tasks.await(query.get());
-
-        WriteBatch batch = query.getFirestore().batch();
-        for (QueryDocumentSnapshot snapshot : querySnapshot) {
-            batch.delete(snapshot.getReference());
-        }
-        Tasks.await(batch.commit());
-
-        return querySnapshot.getDocuments();
-    }
-    // [END delete_collection]
-
-    //트랜잭션실행
-//    public void writeBatch() {
-//        // [START write_batch]
-//        // Get a new write batch
-//        WriteBatch batch = db.batch();
-//
-//        // Set the value of 'NYC'
-//        DocumentReference nycRef = db.collection("cities").document("NYC");
-//        batch.set(nycRef, new City());
-//
-//        // Update the population of 'SF'
-//        DocumentReference sfRef = db.collection("cities").document("SF");
-//        batch.update(sfRef, "population", 1000000L);
-//
-//        // Delete the city 'LA'
-//        DocumentReference laRef = db.collection("cities").document("LA");
-//        batch.delete(laRef);
-//
-//        // Commit the batch
-//        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                // ...
-//            }
-//        });
-        // [END write_batch]
-//    }
 }
 
 

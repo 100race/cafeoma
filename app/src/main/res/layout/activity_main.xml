@@ -8,36 +8,38 @@
 
     <Button
         android:id="@+id/btn_logout"
-        android:layout_width="299dp"
-        android:layout_height="0dp"
+        android:layout_width="290dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="109dp"
         android:layout_marginTop="38dp"
         android:text="logout"
-        app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
+        app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_toInventory"
-        android:layout_width="83dp"
+        android:layout_width="208dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="510dp"
+        android:layout_marginBottom="350dp"
         android:text="재고관리"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.243"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_logout"
+        app:layout_constraintVertical_bias="0.787" />
 
     <Button
-        android:id="@+id/btn_delCollection"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="477dp"
-        android:text="컬렉션삭제"
+        android:id="@+id/btn_toUserPage"
+        android:layout_width="198dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="130dp"
+        android:text="사용자페이지"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
         app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
 

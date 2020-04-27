@@ -114,6 +114,7 @@ public class UserModel {
                         invenId = document.getId();
                         //db.collection("Inventory").document(invenId).collection("InventoryItem"); //하위컬렉션 만들어지나?
                         connectInventory(db,uId,invenId); // 인벤토리 연결
+                        //setInvenId(invenId); 안먹어. null넘겨줌
                         Log.d(TAG, "성공적으로 인벤토리 추가 invenId :" + invenId);
                     }}
             }).addOnFailureListener(new OnFailureListener() {
@@ -123,6 +124,8 @@ public class UserModel {
                 }
             });
         }
+
+
 
     //[Inven 연결해주기] -> 따로 만든 이유는 기존 DBID를 입력했을때도 이걸로이용해야되기때문
     public void connectInventory(FirebaseFirestore db, String uId, String invenId) {
@@ -140,5 +143,14 @@ public class UserModel {
                 Log.w(TAG, "사용자 inven 연결 실패", e);
             }
         });
+    }
+
+    //[invenId 저장메서드] ->test중
+    public void setInvenId(String invenId){
+        this.invenId = invenId;
+    }
+
+    public String getInvenId() {
+        return invenId;
     }
 }

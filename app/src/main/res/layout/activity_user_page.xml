@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.view.UserPageActivity">
+
+    <Button
+        android:id="@+id/btn_secession"
+        android:layout_width="114dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="196dp"
+        android:text="회원탈퇴"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_delCollection" />
+
+    <Button
+        android:id="@+id/btn_delCollection"
+        android:layout_width="119dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="18dp"
+        android:text="저장소 삭제"
+        app:layout_constraintBottom_toTopOf="@+id/btn_secession"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_shareCode" />
+
+    <Button
+        android:id="@+id/btn_shareCode"
+        android:layout_width="121dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="21dp"
+        android:text="저장소 코드 공유"
+        app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
+        app:layout_constraintStart_toStartOf="@+id/tv_userEmail"
+        app:layout_constraintTop_toBottomOf="@+id/tv_userEmail" />
+
+    <ImageView
+        android:id="@+id/iv_userId"
+        android:layout_width="114dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="35dp"
+        android:layout_marginTop="144dp"
+        android:src="@drawable/com_facebook_profile_picture_blank_square"
+        app:layout_constraintBottom_toTopOf="@+id/tv_userEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_userEmail"
+        android:layout_width="143dp"
+        android:layout_height="27dp"
+        android:layout_marginBottom="51dp"
+        android:layout_marginEnd="132dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/btn_shareCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/iv_userId" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="81dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="62dp"
+        android:text="로그인 계정 :"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_userEmail"
+        app:layout_constraintEnd_toStartOf="@+id/tv_userEmail"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="?attr/homeAsUpIndicator" />
+</androidx.constraintlayout.widget.ConstraintLayout>
