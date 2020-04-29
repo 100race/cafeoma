@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+
         btn_logout = (Button) findViewById(R.id.btn_logout);
         btn_logout.setOnClickListener(view -> onClick(view));
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         //[사용자 추가] 기존 사용자인지 확인 필요. 기존사용자면 추가 x)
         FirebaseUser currentUser = mAuth.getCurrentUser();
         userEmail = currentUser.getEmail();
-        userUid = currentUser.getUid();
+        userUid = currentUser.getUid(); // 로그아웃했다가 새로 로그인하면 달라지나?
         Log.d("확인", userEmail); //->잘뜨는데??
 
         um = new UserModel();

@@ -20,8 +20,13 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.vespa.baek.cafeoma.R;;
@@ -43,6 +48,11 @@ public class InventoryActivity extends AppCompatActivity {
     private Button btn_add;
     private EditText et_search;
 
+    //test
+    private FirebaseAuth mAuth;
+    private String userUid;
+    private String userEmail;
+    private String inventoryId;
 
 
     @Override
@@ -63,6 +73,31 @@ public class InventoryActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.inventoryView);
         db = FirebaseFirestore.getInstance(); // 파이어스토어 연동
+
+        //test
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        userEmail = currentUser.getEmail();
+        userUid = currentUser.getUid();
+
+
+//        db.collection("User").document(userUid)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                           DocumentSnapshot document = task.getResult();
+//                            if (document.get("inventoryid") != null) {// db있으면
+//
+ //                               //설마 이 true 데이터가 또여기서만 유지돼서, 여기서 다 끝내줘야되는건가?왠지그런거같음
+//                            } else { // db없으면
+//
+//                            }
+ //                       } else { // 실패
+ //                       }
+ //                   }
+ //               });
 
         //Query 쿼리 사용하는 법을 잘 몰라서 이렇게된듯 ㅎ 일단 하위컬렉션 접근하려면 이렇게 해야되나? path를 한번에 쓰면 안되고? 데이터를 이름순으로 정렬해서 뿌려줌
         Query query = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").orderBy("name", Query.Direction.ASCENDING);

@@ -1,5 +1,6 @@
 package com.vespa.baek.cafeoma.main.view;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,12 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -112,6 +115,7 @@ public class UserPageActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
                                 //여기서 invenId받아온걸로 삭제구현하거나 return값을 전달해줘서 해결하면 좋은데. 아마 return 값은 안줘질걸??내부클래스라
+                                deleteAll();
                                 alert.dismiss();
                             }
                         })
@@ -128,7 +132,25 @@ public class UserPageActivity extends AppCompatActivity {
     }
 
     void deleteAll() {
-        deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
+        db.collection("User").document(userUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.get("inventoryid") != null) {// 연결된 db있으면
+                                Log.d(TAG, "연결 ivtid 삭제시도 :" + document.getData());
+                                deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
+                            } else { // 연결된 db없으면
+                                Log.d(TAG, "연결 ivtid 없음");
+                            }
+                        } else {
+                            Log.d(TAG, "사용자 문서 가져오기 실패", task.getException());
+                        }
+                    }
+                });
+        //deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
         //deleteCollection("User/"+userUid);
     }
 
