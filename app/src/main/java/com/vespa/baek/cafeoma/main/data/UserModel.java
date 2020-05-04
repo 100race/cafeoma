@@ -26,7 +26,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class UserModel {
     private static final String TAG = "UserModel";
     //boolean hasInventory;
-    private String invenId;
+    public static String invenId;
 
     //[사용자 정보 확인]
     public void checkUser(FirebaseFirestore db, String uId, String email) {
@@ -116,8 +116,9 @@ public class UserModel {
                         invenId = document.getId();
                         //db.collection("Inventory").document(invenId).collection("InventoryItem"); //하위컬렉션 만들어지나?
                         connectInventory(db,uId,invenId); // 인벤토리 연결
+                        UserModel.this.setInvenId(invenId); //일케하면 근데 뭐가 달라짐?
                         //setInvenId(invenId); 안먹어. null넘겨줌
-                        Log.d(TAG, "성공적으로 인벤토리 추가 invenId :" + invenId);
+                        Log.d("확인", "성공적으로 인벤토리 추가 invenId :" + invenId);
                     }}
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -148,11 +149,8 @@ public class UserModel {
     }
 
 
-//    public void setInvenId(String invenId){
-//
-//        this.invenId = invenId;
-//
-//    }
+    public void setInvenId(String invenId){ this.invenId = invenId; }
+
     public String getInvenId() {
         return invenId;
     }

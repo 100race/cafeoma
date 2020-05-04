@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 
@@ -197,10 +198,19 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //createDB 하고 InventoryActivity연결
-                                um.createInventory(db,userUid);
-                                Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
-                                startActivity(intent);
                                 alert.dismiss();
+                                um.createInventory(db,userUid);
+                                //인벤토리 추가 후에 실행되도록 딜레이주기
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }, 2000);
+
+
+
                             }
                         })
                 .setNegativeButton("저장소 참여 코드 입력",

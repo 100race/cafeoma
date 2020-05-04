@@ -24,15 +24,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.vespa.baek.cafeoma.R;;
 import com.vespa.baek.cafeoma.inventory.adapter.InventoryAdapter;
 import com.vespa.baek.cafeoma.inventory.adapter.InventoryViewHolder;
 import com.vespa.baek.cafeoma.inventory.data.Item;
+import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.util.Locale;
 
@@ -80,6 +79,9 @@ public class InventoryActivity extends AppCompatActivity {
         userEmail = currentUser.getEmail();
         userUid = currentUser.getUid();
 
+        Log.d("확인",UserModel.invenId);
+        Log.d("확인","추가되기전에 인벤토리액티비티가 실행되나");
+
 
 //        db.collection("User").document(userUid)
 //                .get()
@@ -98,6 +100,8 @@ public class InventoryActivity extends AppCompatActivity {
  //                       }
  //                   }
  //               });
+
+
 
         //Query 쿼리 사용하는 법을 잘 몰라서 이렇게된듯 ㅎ 일단 하위컬렉션 접근하려면 이렇게 해야되나? path를 한번에 쓰면 안되고? 데이터를 이름순으로 정렬해서 뿌려줌
         Query query = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").orderBy("name", Query.Direction.ASCENDING);

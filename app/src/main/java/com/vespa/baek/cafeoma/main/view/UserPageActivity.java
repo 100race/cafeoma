@@ -41,7 +41,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class UserPageActivity extends AppCompatActivity {
+public class  UserPageActivity extends AppCompatActivity {
     private static final String TAG = "UserPageActivity";
 
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4,
