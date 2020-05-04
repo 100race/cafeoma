@@ -42,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.data.Item;
 import com.vespa.baek.cafeoma.inventory.data.ItemModel;
+import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +80,8 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private Uri selectedImageUri; // 갤러리에서 받아온 이미지를 저장 버튼 누를때까지 저장할 로컬장소 -> onCreate때 초기화시킬것임
     private Uri imageUri;
     private String currentPhotoPath;
+    private String documentId;
+    private static String invenId;
 
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
@@ -88,7 +91,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private boolean isModify;
     private boolean hasImage;
     private boolean isDefault;
-    private String documentId;
+
 
 
 
@@ -110,8 +113,9 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         itemModel = new ItemModel();
 
         Intent intent = getIntent();
-
         imageUrl = "";
+        setInvenId();
+
         et_name = findViewById(R.id.et_name);
         et_quantity = findViewById(R.id.et_quantity);
         et_remark= findViewById(R.id.et_remark);
@@ -127,7 +131,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
             documentId = intent.getExtras().getString("ID");
             //임시경로임
             //어댑터의 문서의 내용을 item에 저장한후
-            DocumentReference docref = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").document(documentId);
+            DocumentReference docref = db.collection("Inventory").document(invenId).collection("InventoryItem").document(documentId);
             docref.get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -410,7 +414,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
 
 
     }
-//찍은 사진을 이미지파일로 만들기
+    //[찍은 사진을 이미지파일로 만들기]
     public File createImageFile() throws IOException{
         String imgFileName = System.currentTimeMillis() + ".jpg";
         File imageFile= null;
@@ -426,7 +430,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         return imageFile;
 
     }
-//찍은 사진 갤러리에 저장
+    //[찍은 사진 갤러리에 저장]
     public void galleryAddPic(){
 
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -436,6 +440,11 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         sendBroadcast(mediaScanIntent);
         Toast.makeText(this,"사진이 저장되었습니다",Toast.LENGTH_SHORT).show();
 
+    }
+
+    //[invenId가져오기]
+    public void setInvenId(){
+        this.invenId = UserModel.invenId;
     }
 
 

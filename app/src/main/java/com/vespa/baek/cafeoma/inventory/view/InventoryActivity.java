@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -51,7 +52,7 @@ public class InventoryActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String userUid;
     private String userEmail;
-    private String inventoryId;
+    private String invenId;
 
 
     @Override
@@ -73,38 +74,28 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.inventoryView);
         db = FirebaseFirestore.getInstance(); // 파이어스토어 연동
 
-        //test
+        //계정 정보 ( 이메일, uid , invenId)초기화
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         userEmail = currentUser.getEmail();
         userUid = currentUser.getUid();
 
-        Log.d("확인",UserModel.invenId);
-        Log.d("확인","추가되기전에 인벤토리액티비티가 실행되나");
 
-
-//        db.collection("User").document(userUid)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                           DocumentSnapshot document = task.getResult();
-//                            if (document.get("inventoryid") != null) {// db있으면
-//
- //                               //설마 이 true 데이터가 또여기서만 유지돼서, 여기서 다 끝내줘야되는건가?왠지그런거같음
-//                            } else { // db없으면
-//
-//                            }
- //                       } else { // 실패
- //                       }
- //                   }
- //               });
+        invenId = UserModel.invenId;
+        Log.d("확인",invenId);
+        initView();
 
 
 
-        //Query 쿼리 사용하는 법을 잘 몰라서 이렇게된듯 ㅎ 일단 하위컬렉션 접근하려면 이렇게 해야되나? path를 한번에 쓰면 안되고? 데이터를 이름순으로 정렬해서 뿌려줌
-        Query query = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").orderBy("name", Query.Direction.ASCENDING);
+
+    }
+
+    //onCreate끝
+
+    //[어댑터, 뷰 초기화하는부분]
+    public void initView() {
+        // 하위컬렉션 접근하려면 이렇게. 데이터를 이름순으로 정렬해서 뿌려줌
+        Query query = db.collection("Inventory").document(invenId).collection("InventoryItem").orderBy("name", Query.Direction.ASCENDING);
         //RecyclerOptions 요기 옵션을 넣기 때문에 파이어스토어 어댑터를 따로 써야함
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
@@ -146,9 +137,6 @@ public class InventoryActivity extends AppCompatActivity {
         });
     }
 
-    //onCreate끝
-
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -169,7 +157,7 @@ public class InventoryActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.btn_search:
-           //     String searchText = String.valueOf(et_search.getText()); 일단 아직 쓸일이없음
+                //     String searchText = String.valueOf(et_search.getText()); 일단 아직 쓸일이없음
                 //    searchItem(searchText);
                 break;
             case R.id.btn_delete:
@@ -202,6 +190,8 @@ public class InventoryActivity extends AppCompatActivity {
             super(context, attrs, defStyleAttr, defStyleRes);
         }
     }
+
+
     }
 
 

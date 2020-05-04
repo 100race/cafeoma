@@ -159,26 +159,33 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_toInventory:
                 db.collection("User").document(userUid)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document = task.getResult();
-                                    if (document.get("inventoryid") != null) {// 연결된 db있으면
-                                        Log.d(TAG, "연결 ivtid :" + document.getData());
-                                        Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
-                                        startActivity(intent);
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.get("inventoryid") != null) {// 연결된 db있으면
+                                    Log.d(TAG, "연결 ivtid :" + document.getData());
+                                    um.checkInventory(db,userUid);
+                                    //인벤토리가 서버에 추가 된 후에 인텐트가 실행되도록 딜레이주기
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                                            startActivity(intent);
+                                        }
+                                    }, 2000);
 
-                                    } else { // 연결된 db없으면
-                                        Log.d(TAG, "연결 ivtid 없음");
-                                        inventoryDialog();
-                                    }
-                                } else {
-                                    Log.d(TAG, "사용자 문서 가져오기 실패", task.getException());
+                                } else { // 연결된 db없으면
+                                    Log.d(TAG, "연결 ivtid 없음");
+                                    inventoryDialog();
                                 }
+                            } else {
+                                Log.d(TAG, "사용자 문서 가져오기 실패", task.getException());
                             }
-                        });
+                        }
+                    });
                 break;
             case R.id.btn_toUserPage:
                 Intent intent = new Intent(getApplicationContext(),UserPageActivity.class);
@@ -200,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) { //createDB 하고 InventoryActivity연결
                                 alert.dismiss();
                                 um.createInventory(db,userUid);
-                                //인벤토리 추가 후에 실행되도록 딜레이주기
+                                //인벤토리가 서버에 추가 된 후에 인텐트가 실행되도록 딜레이주기
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     public void run() {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -81,8 +82,16 @@ public class InputInvenIdActivity extends AppCompatActivity {
                                             Log.d(TAG, "존재하는 재고 저장소:" + document.getId());
                                             new UserModel().connectInventory(db, userUid, invenId);
                                             Toast.makeText(getApplicationContext(), "재고 저장소에 연결했습니다.", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
-                                            startActivity(intent);
+
+                                            //인벤토리가 서버에 추가 된 후에 인텐트가 실행되도록 딜레이주기
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                public void run() {
+                                                    Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            }, 2000);
                                         } else {
                                             //없으면 저장소를 찾을 수 없습니다.
                                             Log.d(TAG, "존재하지 않는 재고 저장소");

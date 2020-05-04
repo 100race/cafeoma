@@ -5,9 +5,11 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
+import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,6 +57,7 @@ public class  UserPageActivity extends AppCompatActivity {
     private ImageButton btn_back;
     private TextView tv_userEmail;
     private AlertDialog alert;
+    private ProgressDialog progressDialog;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -86,6 +90,7 @@ public class  UserPageActivity extends AppCompatActivity {
 
         tv_userEmail.setText(userEmail);
 
+        initProgDialog();
 
     }
 
@@ -94,14 +99,37 @@ public class  UserPageActivity extends AppCompatActivity {
             case R.id.btn_shareCode :
                 break;
             case R.id.btn_delCollection :
-                alertDelDialog();
+                new UserModel().checkInventory(db, userUid);
+                progressDialog.show();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (UserModel.hasInventory == false) { // 저장소 없으면
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "삭제할 저장소가 없습니다.", Toast.LENGTH_SHORT).show();
+                        }else { // 저장소 있으면
+                            alertDelDialog();
+                        }
+                    }
+                }, 2000);
+
                 break;
-            case R.id.btn_secession :
+            case R.id.btn_secession ://회원탈퇴
+
                 break;
             case R.id.btn_back:
                 finish();
                 break;
         }
+    }
+
+    //[로딩 다이얼로그 초기화]
+    private void initProgDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("저장소 확인중...");
+        progressDialog.setCancelable(true);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
     }
 
     //[삭제확인 다이얼로그]
@@ -114,7 +142,6 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
-                                //여기서 invenId받아온걸로 삭제구현하거나 return값을 전달해줘서 해결하면 좋은데. 아마 return 값은 안줘질걸??내부클래스라
                                 deleteAll();
                                 alert.dismiss();
                             }
@@ -132,6 +159,7 @@ public class  UserPageActivity extends AppCompatActivity {
     }
 
     void deleteAll() {
+        //인벤토리 삭제하고 user에있는 db문서도 삭제하고 storage에있는것도 삭제해야함
         db.collection("User").document(userUid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -141,6 +169,7 @@ public class  UserPageActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.get("inventoryid") != null) {// 연결된 db있으면
                                 Log.d(TAG, "연결 ivtid 삭제시도 :" + document.getData());
+                                inventoryId = document.get("inventoryid").toString();
                                 deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
                             } else { // 연결된 db없으면
                                 Log.d(TAG, "연결 ivtid 없음");

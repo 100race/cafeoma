@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.vespa.baek.cafeoma.inventory.adapter.InventoryAdapter;
+import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,15 +25,16 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 
 public class ItemModel {
-    private InventoryAdapter adpater;
-
     private static final String TAG = "ItemModel";
     private final static String defaultImage = "";
 
+    private InventoryAdapter adpater;
 
-    //로그인 된 사용자에 있는 데이터베이스 정보를 가져와서 adapter에 연결해주도록함
-    public void getUserInventory(){
+    private static String invenId;
 
+    //로그인 된 사용자에 있는 인벤토리 정보를 가져와서 연결해줌
+    public void setInvenId(){
+        this.invenId = UserModel.invenId;
     }
 
     //[InventoryActivity]
@@ -40,8 +42,9 @@ public class ItemModel {
     //수정
     public void updateItem(Item item,FirebaseFirestore db, String documentId,boolean isChangedImg,boolean isDefaultImg){
         Map<String, Object> map = new HashMap<>();
+        setInvenId();
         if((isChangedImg == false && isDefaultImg) || (isChangedImg && isDefaultImg ==false)){ // 기존 이미지 storage 삭제 -> 이미지를 1. 다른 사진이나 2. 디폴트이미지로 바꾸고 싶을때
-            DocumentReference docref = db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem").document(documentId);
+            DocumentReference docref = db.collection("Inventory").document(invenId).collection("InventoryItem").document(documentId);
             docref.get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -78,7 +81,7 @@ public class ItemModel {
             public void run() {
                 //임시경로
                 Log.d(TAG,"설마이게먼저실행됨?");
-                db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem")
+                db.collection("Inventory").document(invenId).collection("InventoryItem")
                         .document(documentId).update(map);
             }
         }, 2000);
@@ -108,6 +111,7 @@ public class ItemModel {
 
     //저장버튼 누르면 실행될것. editText에 있는 정보를 다 담아와 db에 push해준다
     public void saveItem(Item item, FirebaseFirestore db) {
+        setInvenId();
         Map<String, Object> map = new HashMap<>();
         map.put("image", item.getImage());
         map.put("name", item.getName());
@@ -117,7 +121,7 @@ public class ItemModel {
 
         // Add a new document with a generated ID
         //임시 컬렉션주소 db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem")
-        db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem")
+        db.collection("Inventory").document(invenId).collection("InventoryItem")
                 .add(map)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
