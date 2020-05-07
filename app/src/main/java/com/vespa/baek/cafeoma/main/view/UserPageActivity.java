@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +32,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import com.vespa.baek.cafeoma.main.data.UserModel;
@@ -46,6 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 public class  UserPageActivity extends AppCompatActivity {
     private static final String TAG = "UserPageActivity";
+    private final static String defaultImage = "";
 
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4,
             60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
@@ -63,7 +67,7 @@ public class  UserPageActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String userUid;
     private String userEmail;
-    private String inventoryId;
+    private String invenId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +146,9 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
+                                //삭제 delayDialog
                                 deleteAll();
+                                //삭제 delayDialog 끝
                                 alert.dismiss();
                             }
                         })
@@ -169,8 +175,12 @@ public class  UserPageActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.get("inventoryid") != null) {// 연결된 db있으면
                                 Log.d(TAG, "연결 ivtid 삭제시도 :" + document.getData());
-                                inventoryId = document.get("inventoryid").toString();
-                                deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
+                                invenId = document.get("inventoryid").toString();
+                                deleteStorage(invenId);
+                                //사이사이 delay가 있어야할것같음 - 삭제순서는 storage - 컬렉션 - 문서
+                                deleteCollection("Inventory/"+invenId+"/InventoryItem");
+                                //delay
+                                deleteDocument(invenId);
                             } else { // 연결된 db없으면
                                 Log.d(TAG, "연결 ivtid 없음");
                             }
@@ -179,12 +189,57 @@ public class  UserPageActivity extends AppCompatActivity {
                         }
                     }
                 });
-        //deleteCollection("Inventory/"+inventoryId+"/InventoryItem");
-        //deleteCollection("User/"+userUid);
     }
 
+    //[storage삭제]
+    private void deleteStorage(String invenId) {
+        db.collection("Inventory").document(invenId).collection("InventoryItem")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.get("image"));
+                                String image = document.get("image").toString();
+                                if (image != null && image != defaultImage){//image가 default이미지가 아닐 때 삭제. default이미지면 삭제 x
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    storage.getReferenceFromUrl(image).delete();
+                                }
+
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+    }
+
+
+    //[컬렉션삭제]
     private void deleteCollection(final String path) {
+        //InventoryItem컬렉션(및 하위문서) 삭제 - 실행순서 제어 해야되나? 컬렉션삭제부터 하고 문서삭제해야되는지
         deleteCollection(db.collection(path), 50, EXECUTOR);
+
+    }
+
+    //[문서삭제]
+    private void deleteDocument(String invenId) {
+        db.collection("Inventory").document(invenId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
     }
 
     public void exampleData() {
@@ -246,6 +301,8 @@ public class  UserPageActivity extends AppCompatActivity {
     private Task<Void> deleteCollection(final CollectionReference collection,
                                         final int batchSize,
                                         Executor executor) {
+
+        //InventoryItem컬렉션(및 하위문서) 삭제
 
         // Perform the delete operation on the provided Executor, which allows us to use
         // simpler synchronous logic without blocking the main thread.
