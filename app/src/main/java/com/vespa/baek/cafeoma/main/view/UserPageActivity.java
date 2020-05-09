@@ -5,6 +5,7 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,12 +28,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
+import com.vespa.baek.cafeoma.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import com.vespa.baek.cafeoma.main.data.UserModel;
@@ -101,8 +104,7 @@ public class  UserPageActivity extends AppCompatActivity {
     public void onClick(View v){
         switch(v.getId()){
             case R.id.btn_shareCode :
-                break;
-            case R.id.btn_delCollection :
+                initProgDialog();
                 new UserModel().checkInventory(db, userUid);
                 progressDialog.show();
 
@@ -111,15 +113,48 @@ public class  UserPageActivity extends AppCompatActivity {
                     public void run() {
                         if (UserModel.hasInventory == false) { // 저장소 없으면
                             progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(), "공유할 저장소가 없습니다.", Toast.LENGTH_SHORT).show();
+                        }else { // 저장소 있으면
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ShareInvenIdActivity.class);
+                            intent.putExtra("invenId",UserModel.invenId);
+                            startActivity(intent);
+                        }
+                    }
+                }, 2000);
+
+
+                break;
+            case R.id.btn_delCollection :
+                initProgDialog();
+                new UserModel().checkInventory(db, userUid);
+                progressDialog.show();
+
+                handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        if (UserModel.hasInventory == false) { // 저장소 없으면
+                            progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "삭제할 저장소가 없습니다.", Toast.LENGTH_SHORT).show();
                         }else { // 저장소 있으면
-                            alertDelDialog();
+                            progressDialog.dismiss(); // dismiss 했다가는 다시 안보이길래
+                            delInvenDialog();
                         }
                     }
                 }, 2000);
 
                 break;
-            case R.id.btn_secession ://회원탈퇴
+            case R.id.btn_secession ://회원탈퇴 -> 메인으로 이동
+                initProgDialog();
+                new UserModel().checkInventory(db, userUid);
+                progressDialog.show();
+
+                handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        delUserDialog();
+                    }
+                }, 2000);
 
                 break;
             case R.id.btn_back:
@@ -130,25 +165,39 @@ public class  UserPageActivity extends AppCompatActivity {
 
     //[로딩 다이얼로그 초기화]
     private void initProgDialog() {
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(UserPageActivity.this);
         progressDialog.setMessage("저장소 확인중...");
         progressDialog.setCancelable(true);
         progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
     }
 
-    //[삭제확인 다이얼로그]
-    private void alertDelDialog() { //진짜로 삭제할건지 확인
+    //[탈퇴확인 다이얼로그]
+    private void delUserDialog() { //진짜로 탈퇴할건지 확인
 
         AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
-        alt_builder.setTitle("저장소 삭제 확인");
-        alt_builder.setMessage("재고 저장소를 삭제하면 저장소와 관련한 모든 데이터가 사라집니다. 그래도 삭제하시겠습니까?")
+        alt_builder.setTitle("회원 탈퇴 확인");
+        alt_builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //dismiss 되면서 부를 progressDialog. 삭제구현하는부분
+
+                    progressDialog = new ProgressDialog(UserPageActivity.this);
+                    progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+
+                    progressDialog.show();
+                    deleteAll(true);
+
+            }
+        });
+
+        alt_builder.setMessage("회원 정보, 재고와 관련한 모든 데이터가 사라집니다. 그래도 탈퇴하시겠습니까?")
                 .setPositiveButton("계속",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
-                                //삭제 delayDialog
-                                deleteAll();
-                                //삭제 delayDialog 끝
                                 alert.dismiss();
                             }
                         })
@@ -156,7 +205,7 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //취소
-                                alert.dismiss();
+                                alert.cancel();
                             }
                         });
 
@@ -164,8 +213,54 @@ public class  UserPageActivity extends AppCompatActivity {
         alert.show();
     }
 
-    void deleteAll() {
-        //인벤토리 삭제하고 user에있는 db문서도 삭제하고 storage에있는것도 삭제해야함
+
+
+    //[삭제확인 다이얼로그]
+    private void delInvenDialog() { //진짜로 삭제할건지 확인
+
+        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
+        alt_builder.setTitle("저장소 삭제 확인");
+        alt_builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //dismiss 되면서 부를 progressDialog
+
+                progressDialog = new ProgressDialog(UserPageActivity.this);
+                progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
+                progressDialog.setCancelable(false);
+                progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+
+                progressDialog.show();
+                deleteAll(false);
+                 //dismiss 위치를 deleteAll 로 옮김
+
+            }
+        });
+
+        alt_builder.setMessage("재고 저장소를 삭제하면 저장소와 관련한 모든 데이터가 사라집니다. 그래도 삭제하시겠습니까?")
+                .setPositiveButton("계속",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { //삭제
+                                alert.dismiss();
+                            }
+                        })
+                .setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { //취소
+                                alert.cancel();
+                            }
+                        });
+
+
+        alert = alt_builder.create();
+        alert.show();
+    }
+
+    private void deleteAll(boolean deleteUser) {
+        //삭제순서는 storage - 컬렉션 - 문서 - 사용자정보삭제
         db.collection("User").document(userUid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -174,21 +269,77 @@ public class  UserPageActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.get("inventoryid") != null) {// 연결된 db있으면
-                                Log.d(TAG, "연결 ivtid 삭제시도 :" + document.getData());
+                                Log.d(TAG, "연결 ivtid 삭제시작 :" + document.getData());
+
+                                //사이사이 delay
                                 invenId = document.get("inventoryid").toString();
+                                // 1.Storage삭제
                                 deleteStorage(invenId);
-                                //사이사이 delay가 있어야할것같음 - 삭제순서는 storage - 컬렉션 - 문서
-                                deleteCollection("Inventory/"+invenId+"/InventoryItem");
-                                //delay
-                                deleteDocument(invenId);
-                            } else { // 연결된 db없으면
+                                Log.d(TAG, "인벤토리 정보 : 스토리지삭제");
+                                // 2.Collection삭제
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        deleteCollection("Inventory/"+invenId+"/InventoryItem"); // 컬렉션삭제
+                                        Log.d(TAG, "인벤토리 정보 : 컬렉션삭제");
+                                    }
+                                }, 2000);
+                                // 3.Document 삭제
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        deleteDocument(invenId);
+                                        Log.d(TAG, "인벤토리 정보 : 문서삭제");
+                                    }
+                                }, 2000);
+
+
+                                if (deleteUser) { // 탈퇴면 유저까지 삭제
+
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            deleteUser();
+                                        }
+                                    }, 2000);
+
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            delUser();
+                                            progressDialog.dismiss();
+                                        }
+                                    }, 2000);
+                                } else { // 탈퇴아니면 유저 삭제 x
+                                    handler.postDelayed(new Runnable() {
+                                        public void run() {
+                                            deleteInvenId(); //Invenid 삭제
+                                            progressDialog.dismiss();
+                                        }
+                                    }, 2000);
+
+                                }
+
+                            } else { // 탈퇴인데 연결된 db없으면
                                 Log.d(TAG, "연결 ivtid 없음");
+
+                                deleteUser();
+
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        delUser();
+                                        progressDialog.dismiss();
+                                    }
+                                }, 2000);
+
+
+
                             }
                         } else {
                             Log.d(TAG, "사용자 문서 가져오기 실패", task.getException());
                         }
                     }
                 });
+
+
     }
 
     //[storage삭제]
@@ -240,6 +391,63 @@ public class  UserPageActivity extends AppCompatActivity {
                         Log.w(TAG, "Error deleting document", e);
                     }
                 });
+    }
+
+    //[invenId삭제]
+    private void deleteInvenId() {
+        Map<String,Object> updates = new HashMap<>();
+        updates.put("inventoryid", FieldValue.delete());
+        db.collection("User").document(userUid)
+                .update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d(TAG, "사용자 정보 : 인벤토리아이디 삭제");
+            }
+        });
+    }
+
+    //[유저문서 삭제]
+    private void deleteUser() {
+        db.collection("User").document(userUid)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "사용자 정보 : 유저문서 삭제");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error deleting document", e);
+                    }
+                });
+    }
+
+    //[사용자 삭제]
+    private void delUser() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {  // 이부분 실행이안됐음
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "사용자 정보 : 사용자 탈퇴");
+                            progressDialog.cancel();
+                            Toast.makeText(getApplicationContext(), "탈퇴 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, " 사용자 정보 : 사용자 탈퇴 실패");
+
+            }
+        });
     }
 
     public void exampleData() {

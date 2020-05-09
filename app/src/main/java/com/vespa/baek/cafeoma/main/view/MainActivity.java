@@ -93,29 +93,23 @@ public class MainActivity extends AppCompatActivity {
 
         //[사용자 추가] 기존 사용자인지 확인 필요. 기존사용자면 추가 x)
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        userEmail = currentUser.getEmail();
-        userUid = currentUser.getUid(); // 로그아웃했다가 새로 로그인하면 달라지나?
-        Log.d("확인", userEmail); //->잘뜨는데??
 
-        um = new UserModel();
-        um.checkUser(db, userUid, userEmail);
-
-
-    }
-
-    //[로그인 상태 확인]
-    //여기서 currenUser이 null로오면 로그인 액티비티로 넘어가게 해줌
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
+        if (currentUser == null) { //로그인 상태 확인 후 로그인 안돼있으면 login으로 넘겨줌
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            finish();
+        }else {
+
+            userEmail = currentUser.getEmail();
+            userUid = currentUser.getUid(); // 로그아웃했다가 새로 로그인하면 달라지나?
+            Log.d("확인", userEmail); //->잘뜨는데??
+
+            um = new UserModel();
+            um.checkUser(db, userUid, userEmail);
         }
 
-
     }
+
 
     //[뒤로가기 두번누르면 종료]
     @Override
