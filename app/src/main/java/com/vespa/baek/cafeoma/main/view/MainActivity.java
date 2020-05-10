@@ -2,17 +2,16 @@ package com.vespa.baek.cafeoma.main.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -26,20 +25,17 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.vespa.baek.cafeoma.LoginActivity;
+import com.vespa.baek.cafeoma.login.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
-import com.vespa.baek.cafeoma.main.data.User;
 import com.vespa.baek.cafeoma.main.data.UserModel;
+import com.vespa.baek.cafeoma.main.view.memo.MemoActivity;
+import com.vespa.baek.cafeoma.main.view.shop.ShopActivity;
 
 import java.security.MessageDigest;
 
@@ -55,10 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private String userEmail;
 
     //[View]
+    private Button btn_toShop;
+    private Button btn_toMemo;
     private Button btn_logout;
     private Button btn_toInventory;
     private Button btn_toUserPage;
     private AlertDialog alert;
+    private ProgressDialog progressDialog;
 
 
 
@@ -83,13 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         btn_logout = (Button) findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(view -> onClick(view));
-
         btn_toInventory = findViewById(R.id.btn_toInventory);
-        btn_toInventory.setOnClickListener(view -> onClick(view));
-
         btn_toUserPage = findViewById(R.id.btn_toUserPage);
-        btn_toUserPage.setOnClickListener(view -> onClick(view));
+        btn_toMemo = findViewById(R.id.btn_toMemo);
+        btn_toShop = findViewById(R.id.btn_toShop);
+
+        btn_toInventory.setOnClickListener(v -> onClick(v));
+        btn_logout.setOnClickListener(v -> onClick(v));
+        btn_toUserPage.setOnClickListener(v -> onClick(v));
+        btn_toMemo.setOnClickListener(v -> onClick(v));
+        btn_toShop.setOnClickListener(v -> onClick(v));
 
         //[사용자 추가] 기존 사용자인지 확인 필요. 기존사용자면 추가 x)
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
             um = new UserModel();
             um.checkUser(db, userUid, userEmail);
         }
+
+        initProgDialog();
 
     }
 
@@ -152,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 logOut();
                 break;
             case R.id.btn_toInventory:
+                progressDialog.show();
                 db.collection("User").document(userUid)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -168,11 +173,13 @@ public class MainActivity extends AppCompatActivity {
                                         public void run() {
                                             Intent intent = new Intent(getApplicationContext(), InventoryActivity.class);
                                             startActivity(intent);
+                                            progressDialog.dismiss();
                                         }
                                     }, 2000);
 
                                 } else { // 연결된 db없으면
                                     Log.d(TAG, "연결 ivtid 없음");
+                                    progressDialog.dismiss();
                                     inventoryDialog();
                                 }
                             } else {
@@ -186,8 +193,58 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
 
+            case R.id.btn_toShop:
+                progressDialog.show();
+                um.checkInventory(db, userUid);
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        Boolean hasInven = UserModel.hasInventory;
+                        if (hasInven) {
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ShopActivity.class);
+                            startActivity(intent);
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),"재고 저장소를 먼저 생성해주세요.",Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                }, 2000);
+                break;
+            case R.id.btn_toMemo:
+                progressDialog.show();
+                um.checkInventory(db, userUid);
+
+                handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        Boolean hasInven = UserModel.hasInventory;
+                        if (hasInven) {
+                            progressDialog.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), MemoActivity.class);
+                            startActivity(intent);
+                        } else {
+                            progressDialog.dismiss();
+                            Toast.makeText(getApplicationContext(),"재고 저장소를 먼저 생성해주세요.",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, 2000);
+                break;
+
+
         }
     }
+
+    //[저장소확인 다이얼로그]
+    private void initProgDialog() {
+        progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("저장소 확인중...");
+        progressDialog.setCancelable(true);
+        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+    }
+
 
     //[재고저장소 선택 다이얼로그]
     private void inventoryDialog() { //생성할지 기존DBID 입력할지 dialog 띄워줌
@@ -259,8 +316,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-    //[유저삭제]
 
 
 

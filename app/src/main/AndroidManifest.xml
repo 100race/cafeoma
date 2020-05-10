@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".main.view.ShareInvenIdActivity"></activity>
+        <activity android:name=".main.view.memo.ModifyMemoActivity"></activity>
+        <activity android:name=".main.view.memo.MemoActivity" />
+        <activity android:name=".main.view.shop.ShopActivity" />
+        <activity android:name=".main.view.ShareInvenIdActivity" />
         <activity android:name=".main.view.UserPageActivity" />
         <activity android:name=".main.view.InputInvenIdActivity" />
         <activity android:name=".inventory.view.ModifyInventoryActivity" />
@@ -20,8 +23,8 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotifyEmailSendActivity" />
-        <activity android:name=".VerifyEmailLoginActivity">
+        <activity android:name=".login.NotifyEmailSendActivity" />
+        <activity android:name=".login.VerifyEmailLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -34,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity android:name=".main.view.MainActivity">
             <intent-filter>
@@ -81,10 +84,10 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

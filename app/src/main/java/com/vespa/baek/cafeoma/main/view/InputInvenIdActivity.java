@@ -20,12 +20,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.vespa.baek.cafeoma.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import com.vespa.baek.cafeoma.main.data.UserModel;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class InputInvenIdActivity extends AppCompatActivity {
     private static final String TAG = "InputInvenIdActivity";

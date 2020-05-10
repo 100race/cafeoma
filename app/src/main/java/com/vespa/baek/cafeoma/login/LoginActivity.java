@@ -1,4 +1,4 @@
-package com.vespa.baek.cafeoma;
+package com.vespa.baek.cafeoma.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +41,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.main.view.MainActivity;
 
 import java.util.regex.Matcher;
@@ -184,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "이메일 보냄");
-                            Intent intent = new Intent(getApplicationContext(),NotifyEmailSendActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), NotifyEmailSendActivity.class);
                             startActivity(intent);
                         }
                     }

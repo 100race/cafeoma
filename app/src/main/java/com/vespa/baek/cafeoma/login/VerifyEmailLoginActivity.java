@@ -1,4 +1,4 @@
-package com.vespa.baek.cafeoma;
+package com.vespa.baek.cafeoma.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.vespa.baek.cafeoma.R;
+import com.vespa.baek.cafeoma.login.LoginActivity;
 import com.vespa.baek.cafeoma.main.view.MainActivity;
 
 public class VerifyEmailLoginActivity extends AppCompatActivity {

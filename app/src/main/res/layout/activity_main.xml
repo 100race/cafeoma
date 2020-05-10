@@ -9,12 +9,12 @@
     <Button
         android:id="@+id/btn_logout"
         android:layout_width="290dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="109dp"
-        android:layout_marginTop="38dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="195dp"
         android:text="logout"
-        app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
+        app:layout_constraintBottom_toTopOf="@+id/btn_toInventory"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,19 +29,46 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_logout"
-        app:layout_constraintVertical_bias="0.787" />
+        app:layout_constraintVertical_bias="0.494" />
+
+
+    <Button
+        android:id="@+id/btn_toShop"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:text="쇼핑몰"
+        app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
+        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_toUserPage"
+        app:layout_constraintTop_toBottomOf="@+id/btn_toInventory"
+        app:layout_constraintVertical_bias="0.21" />
+
+    <Button
+        android:id="@+id/btn_toMemo"
+        android:layout_width="198dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="220dp"
+        android:text="메모장"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
+        app:layout_constraintTop_toBottomOf="@+id/btn_toInventory"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btn_toUserPage"
         android:layout_width="198dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="130dp"
+        android:layout_marginBottom="10dp"
         android:text="사용자페이지"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_logout"
+        app:layout_constraintVertical_bias="0.665" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

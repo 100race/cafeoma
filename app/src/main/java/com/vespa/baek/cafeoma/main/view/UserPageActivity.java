@@ -5,7 +5,6 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,9 +34,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
-import com.vespa.baek.cafeoma.LoginActivity;
+import com.vespa.baek.cafeoma.login.LoginActivity;
 import com.vespa.baek.cafeoma.R;
-import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import com.vespa.baek.cafeoma.main.data.UserModel;
 
 import java.util.Arrays;

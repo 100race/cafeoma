@@ -43,8 +43,6 @@ public class InventoryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseFirestore db;
     private InventoryAdapter adapter;
-    private Button btn_search;
-    private Button btn_delete;
     private Button btn_add;
     private EditText et_search;
 
@@ -62,13 +60,9 @@ public class InventoryActivity extends AppCompatActivity {
 
 
         btn_add = findViewById(R.id.btn_add);
-        btn_search = findViewById(R.id.btn_search);
-        btn_delete = findViewById(R.id.btn_delete);
         et_search = findViewById(R.id.et_search);
 
         btn_add.setOnClickListener(view -> onClick(view));
-        btn_search.setOnClickListener(view -> onClick(view));
-        btn_delete.setOnClickListener(view -> onClick(view));
 
 
         recyclerView = findViewById(R.id.inventoryView);
@@ -156,15 +150,7 @@ public class InventoryActivity extends AppCompatActivity {
                 Intent intent = new Intent(InventoryActivity.this, ModifyInventoryActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.btn_search:
-                //     String searchText = String.valueOf(et_search.getText()); 일단 아직 쓸일이없음
-                //    searchItem(searchText);
-                break;
-            case R.id.btn_delete:
-                break;
-
         }
-
     }
 
     private static class newLinearLayoutManager extends LinearLayoutManager {

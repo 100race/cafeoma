@@ -7,6 +7,27 @@
     tools:context=".inventory.view.InventoryActivity">
 
 
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="289dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="52dp"
+        android:ems="10"
+        android:hint="재고명, 수량으로 검색"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        tools:layout_editor_absoluteX="26dp" />
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="71dp"
+        android:layout_height="47dp"
+        android:layout_marginBottom="52dp"
+        android:layout_marginStart="300dp"
+        android:text="추가"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/et_search" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -26,58 +47,5 @@
             app:layout_constraintRight_toRightOf="parent" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:layout_marginEnd="29dp"
-        android:layout_marginTop="19dp"
-        android:text="검색"
-        app:layout_constraintBottom_toTopOf="@+id/btn_delete"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/et_search"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/et_search"
-        android:layout_width="289dp"
-        android:layout_height="44dp"
-        android:layout_marginBottom="9dp"
-        android:layout_marginEnd="31dp"
-        android:layout_marginStart="57dp"
-        android:layout_marginTop="22dp"
-        android:ems="10"
-        android:hint="재고명, 수량으로 검색"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/btn_add"
-        app:layout_constraintEnd_toStartOf="@+id/btn_search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="255dp"
-        android:text="추가"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toStartOf="@+id/btn_delete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_search" />
-
-    <Button
-        android:id="@+id/btn_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="31dp"
-        android:text="삭제"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_add"
-        app:layout_constraintTop_toBottomOf="@+id/btn_search" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
