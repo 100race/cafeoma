@@ -73,7 +73,7 @@ public class ShopViewHolder  extends RecyclerView.ViewHolder implements View.OnC
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                    // 다이얼로그를 보여주기 위해 edit_box.xml 파일을 사용합니다.
+                    // 다이얼로그를 보여주기 위해 edit_box.xml 파일을 사용
 
                     View view = LayoutInflater.from(context)
                             .inflate(R.layout.edit_box, null, false);
@@ -82,7 +82,7 @@ public class ShopViewHolder  extends RecyclerView.ViewHolder implements View.OnC
                     final EditText et_dialog_shopName = (EditText) view.findViewById(R.id.et_dialog_shopName);
                     final EditText et_dialog_shopUrl = (EditText) view.findViewById(R.id.et_dialog_shopUrl);
 
-                    // 6. 해당 줄에 입력되어 있던 데이터를 불러와서 다이얼로그에 보여줍니다.
+                    // 6. 해당 줄에 입력되어 있던 데이터를 불러와서 다이얼로그에
 
                     et_dialog_shopName.setText(String.valueOf(adapter.getSnapshots().getSnapshot(getAdapterPosition()).get("shopName")));
                     et_dialog_shopUrl.setText(String.valueOf(adapter.getSnapshots().getSnapshot(getAdapterPosition()).get("shopUrl")));
@@ -102,7 +102,7 @@ public class ShopViewHolder  extends RecyclerView.ViewHolder implements View.OnC
                             new ShopModel().updateShop(shop,db,documentId);
 
 
-                            // 9. 어댑터에서 RecyclerView에 반영하도록 합니다.
+                            // 9. 어댑터에서 RecyclerView에 반영하도록
 
                             adapter.notifyItemChanged(getAdapterPosition());
 

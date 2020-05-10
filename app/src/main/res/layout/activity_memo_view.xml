@@ -19,24 +19,23 @@
         app:layout_constraintTop_toBottomOf="@+id/et_remark" />
 
     <Button
-        android:id="@+id/btn_save"
+        android:id="@+id/btn_toEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="51dp"
         android:layout_marginEnd="73dp"
-        android:text="저장"
+        android:text="수정"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/et_contents"
+    <TextView
+        android:id="@+id/tv_contents"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="192dp"
         android:layout_marginEnd="14dp"
         android:layout_marginStart="14dp"
         android:background="@drawable/edittextshape"
-        android:hint="내용"
         android:inputType="textMultiLine"
         android:lines="8"
         android:maxLines="100"
@@ -44,20 +43,30 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
-    <EditText
-        android:id="@+id/et_title"
+    <TextView
+        android:id="@+id/tv_title"
         android:layout_width="252dp"
         android:layout_height="45dp"
         android:layout_marginBottom="19dp"
         android:layout_marginStart="14dp"
         android:layout_marginTop="104dp"
         android:ems="10"
-        android:hint="제목"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/et_contents"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_contents"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="207dp"
+        android:layout_height="31dp"
+        android:layout_marginBottom="46dp"
+        android:layout_marginEnd="31dp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 

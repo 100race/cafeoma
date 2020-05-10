@@ -77,7 +77,7 @@ public class ShopActivity extends AppCompatActivity {
 
         adapter = new ShopAdapter(options,this);
 
-        // 한줄에 3개의 컬럼을 추가합니다.
+        // 한줄에 3개의 컬럼을 추가
         int numberOfColumns = 3;
         gridLayoutManager = new GridLayoutManager(this,numberOfColumns);
         recyclerView.setLayoutManager(gridLayoutManager);

@@ -30,26 +30,8 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shop, ShopViewHolder> 
     public ShopAdapter(@NonNull FirestoreRecyclerOptions<Shop> options, Context context) {
         super(options);
         this.context = context;
-        setHasStableIds(true);
+  //      setHasStableIds(true);
     }
-
-    @Override
-    public long getItemId(int position) {
-        return super.getItemId(position);
-    }
-    //[filterable해보기]
-
-
-//    //여기서 아예 position에 따른 db의 document id를 가져와버리면 되지않을까?
-//    public int getFilteredPos(int position) {
-//        ArrayList<Integer> filteredIndex = getFilteredIndex();
-//        int filteredPos = filteredIndex.get(position);
-//        Log.d("filteredPos:",String.valueOf(filteredIndex.get(position)));
-//        //String itemId = this.getSnapshots().getSnapshot(filteredPos).getReference().getId(); //
-//        return filteredPos;
-//    }
-//    //documentid를 바로 가져오게 할수도있음
-
 
     @NonNull
     @Override
@@ -78,7 +60,7 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shop, ShopViewHolder> 
                                             }
         );
 
-        holder.setAdapter(this); // this하면 adapter이 연결되겠지?
+        holder.setAdapter(this); //
     }
 
 }
