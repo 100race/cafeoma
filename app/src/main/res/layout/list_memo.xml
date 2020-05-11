@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:ellipsize="end"
-                    android:maxlength="15"
+                    android:maxLength="15"
                     android:text="제목"
                     android:textSize="20dp"
                     android:textStyle="bold" />

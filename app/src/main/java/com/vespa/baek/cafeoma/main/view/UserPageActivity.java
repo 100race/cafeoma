@@ -236,7 +236,7 @@ public class  UserPageActivity extends AppCompatActivity {
             }
         });
 
-        alt_builder.setMessage("재고 저장소를 삭제하면 저장소와 관련한 모든 데이터가 사라집니다. 그래도 삭제하시겠습니까?")
+        alt_builder.setMessage("재고 저장소를 삭제하면 쇼핑몰, 메모, 재고 저장소와 관련한 모든 데이터가 사라집니다. 그래도 삭제하시겠습니까?")
                 .setPositiveButton("계속",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -274,11 +274,13 @@ public class  UserPageActivity extends AppCompatActivity {
                                 // 1.Storage삭제
                                 deleteStorage(invenId);
                                 Log.d(TAG, "인벤토리 정보 : 스토리지삭제");
-                                // 2.Collection삭제
+                                // 2.Collection삭제 ( InventoryItem, Memo, ShopUrl)
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     public void run() {
-                                        deleteCollection("Inventory/"+invenId+"/InventoryItem"); // 컬렉션삭제
+                                        deleteCollection("Inventory/" + invenId + "/InventoryItem"); // 컬렉션삭제
+                                        deleteCollection("Inventory/" + invenId + "/Memo");
+                                        deleteCollection("Inventory/" + invenId + "/ShopURl");
                                         Log.d(TAG, "인벤토리 정보 : 컬렉션삭제");
                                     }
                                 }, 2000);
@@ -303,6 +305,7 @@ public class  UserPageActivity extends AppCompatActivity {
                                         public void run() {
                                             delUser();
                                             progressDialog.dismiss();
+                                            Toast.makeText(UserPageActivity.this,"저장소가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
                                         }
                                     }, 2000);
                                 } else { // 탈퇴아니면 유저 삭제 x
@@ -310,6 +313,7 @@ public class  UserPageActivity extends AppCompatActivity {
                                         public void run() {
                                             deleteInvenId(); //Invenid 삭제
                                             progressDialog.dismiss();
+                                            Toast.makeText(UserPageActivity.this,"저장소가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
                                         }
                                     }, 2000);
 
@@ -325,6 +329,7 @@ public class  UserPageActivity extends AppCompatActivity {
                                     public void run() {
                                         delUser();
                                         progressDialog.dismiss();
+                                        Toast.makeText(UserPageActivity.this,"저장소가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
                                     }
                                 }, 2000);
 

@@ -108,6 +108,7 @@ public class InventoryActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         et_search.addTextChangedListener(new TextWatcher() {
 
+
             @Override
             public void afterTextChanged(Editable arg0) {
 
@@ -135,13 +136,24 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening(); // 어댑터가 stopListening(?)할수잇게게
+
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+//        if (et_search.getText().toString() != "") {
+//            adapter.startListening();
+//        } else {
+//            String text = et_search.getText().toString()
+//
+//                    .toLowerCase(Locale.getDefault());
+//            adapter.getFilter().filter(text);
+//        }
+        et_search.setText(""); // 초기화 하는게 깔끔하다
         adapter.startListening();
+
     }
 
     public void onClick(View v){
