@@ -21,6 +21,7 @@ import com.vespa.baek.cafeoma.main.view.memo.data.Memo;
 
 public class MemoActivity extends AppCompatActivity {
 
+    //[View]
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseFirestore db;
@@ -28,7 +29,7 @@ public class MemoActivity extends AppCompatActivity {
     private ImageButton btn_add;
     private ImageButton btn_back;
 
-    //test
+    //[Auth]
     private FirebaseAuth mAuth;
     private String userUid;
     private String userEmail;

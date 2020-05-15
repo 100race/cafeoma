@@ -25,7 +25,8 @@ import java.util.Map;
 
 public class MemoViewActivity extends AppCompatActivity {
     private final String TAG = "MemoViewActivity";
-    //[VIEW]
+
+    //[View]
     private TextView tv_title;
     private TextView tv_contents;
     private TextView tv_date;
@@ -34,6 +35,7 @@ public class MemoViewActivity extends AppCompatActivity {
     private Memo memo;
     private MemoModel memoModel;
 
+    //[Auth]
     private FirebaseFirestore db;
     private Intent intent;
     private String documentId;

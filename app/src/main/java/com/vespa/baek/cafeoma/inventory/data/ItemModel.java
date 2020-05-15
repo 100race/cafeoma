@@ -32,18 +32,19 @@ public class ItemModel {
 
     private static String invenId;
 
-    //로그인 된 사용자에 있는 인벤토리 정보를 가져와서 연결해줌
+    //로그인 된 사용자에 있는 인벤토리 아이디를 가져와서 연결해줌
     public void setInvenId(){
         this.invenId = UserModel.invenId;
     }
 
     //[InventoryActivity]
 
-    //수정
+    //[수정]
     public void updateItem(Item item,FirebaseFirestore db, String documentId,boolean isChangedImg,boolean isDefaultImg){
         Map<String, Object> map = new HashMap<>();
         setInvenId();
-        if((isChangedImg == false && isDefaultImg) || (isChangedImg && isDefaultImg ==false)){ // 기존 이미지 storage 삭제 -> 이미지를 1. 다른 사진이나 2. 디폴트이미지로 바꾸고 싶을때
+        // 이미지를 1. 다른 사진이나 2. 디폴트이미지로 바꾸고 싶을때  ->  기존 이미지 storage 삭제
+        if((isChangedImg == false && isDefaultImg) || (isChangedImg && isDefaultImg ==false)){
             DocumentReference docref = db.collection("Inventory").document(invenId).collection("InventoryItem").document(documentId);
             docref.get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -75,19 +76,17 @@ public class ItemModel {
         map.put("quantity", item.getQuantity());
         map.put("shopUrl",item.getShopUrl());
 
-        //핸들러를 써서 실행에 딜레이를 살짝 줌 -> 안쓰면
+        //핸들러를 써서 실행에 딜레이를 줌
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                //임시경로
-                Log.d(TAG,"설마이게먼저실행됨?");
                 db.collection("Inventory").document(invenId).collection("InventoryItem")
                         .document(documentId).update(map);
             }
         }, 2000);
     }
 
-    //삭제 - storage 와 firestore 둘 다 삭제
+    //[삭제] - storage 와 firestore 둘 다 삭제
     public void deleteItem(InventoryAdapter adapter, int position) {
         this.adpater = adapter;
         DocumentSnapshot snapshot = adapter.getSnapshots().getSnapshot(position);
@@ -100,16 +99,13 @@ public class ItemModel {
          }
 
         snapshot.getReference().delete();
-        //adapter.getSnapshots().getSnapshot(position).getReference().delete();
 
     }
 
 
-
-
     //[ModifyInventoryActivity]
 
-    //저장버튼 누르면 실행될것. editText에 있는 정보를 다 담아와 db에 push해준다
+    //[저장]  editText에 있는 정보를 다 담아와 db에 push해준다
     public void saveItem(Item item, FirebaseFirestore db) {
         setInvenId();
         Map<String, Object> map = new HashMap<>();
@@ -119,8 +115,6 @@ public class ItemModel {
         map.put("quantity", item.getQuantity());
         map.put("shopUrl",item.getShopUrl());
 
-        // Add a new document with a generated ID
-        //임시 컬렉션주소 db.collection("Inventory").document("jG9OZBK4zUH7mgWAeh7q").collection("InventoryItem")
         db.collection("Inventory").document(invenId).collection("InventoryItem")
                 .add(map)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -136,10 +130,7 @@ public class ItemModel {
                     }
                 });
 
-
-
     }
-
 
 
 }

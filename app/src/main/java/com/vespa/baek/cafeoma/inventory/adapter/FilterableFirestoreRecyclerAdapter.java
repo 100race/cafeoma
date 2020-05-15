@@ -28,15 +28,16 @@ import java.util.List;
 /**
  * @param <T>  model class, for parsing {@link DocumentSnapshot}s.
  * @param <VH> {@link RecyclerView.ViewHolder} class.
+ * 파이어베이스 리사이클러 어댑터를 필터적용할 수 있게 상속해서 구현한 클래스
  */
 public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH>
         implements ChangeEventListener, LifecycleObserver, Filterable {
 
-    private static final String TAG = "FirestoreRecycler";
+    private static final String TAG = "FilterableFirestoreRecycler";
 
     private final ObservableSnapshotArray<T> mSnapshots;
-    private final ArrayList<T> list, backupList; //어레이리스트로 바꿔줌
-    private ArrayList<Integer> filteredIndex; //내가 선언해줌 필터된 인덱스를 저장할곳
+    private final ArrayList<T> list, backupList;
+    private ArrayList<Integer> filteredIndex; // new 필된 인덱스를 저장할곳
     private CustomFilter mCustomFilter;
     private boolean isFiltarable;
     private boolean isFiltered;
@@ -47,7 +48,7 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
      * FirestoreRecyclerOptions} for configuration options.
      */
     public FilterableFirestoreRecyclerAdapter(@NonNull FirestoreRecyclerOptions<T> options, boolean isFiltarable) {
-        mSnapshots = options.getSnapshots(); //여기서 아예 데이터가 options 넣어준거랑 snapshot연결돼서 이 position이랑 늘 연결되는거같은데
+        mSnapshots = options.getSnapshots(); //여기서 아예 데이터가 options 넣어준거랑 snapshot연결돼서 이 position이랑 늘 연결됨 즉 position을 따로 저장할 곳이 필요하다
 
         list = new ArrayList<>();
         backupList = new ArrayList<>();
@@ -65,7 +66,7 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void startListening() {
         if (list.size() > 0) list.clear(); // 3.추가한거
-        if (backupList.size() > 0) backupList.clear(); //추가보류 - 근데 같이 추가해야 말이될거같음
+        if (backupList.size() > 0) backupList.clear(); //
         if (filteredIndex.size() > 0) filteredIndex.clear(); //
         if (!mSnapshots.isListening(this)) {
             mSnapshots.addChangeEventListener(this);
@@ -78,13 +79,13 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void stopListening() {
         mSnapshots.removeChangeEventListener(this);
-//        list.clear(); // 이건 새로 넣어준 부분 44
-//        backupList.clear(); // 이건 내가 새로 넣어준부분. 백업리스트도 같이 초기화해야될거같았어
+//        list.clear(); // 4. 추가한거
+//        backupList.clear(); //
 //        filteredIndex.clear();
         notifyDataSetChanged();
     }
 
-    @Override //여기서 구현해줘야 stableID를 쓸 수 있는거 직접 내가 구현 - 필터된리스트의 getItemId할거다. 지우지마
+    @Override //여기서 구현해줘야 stableID를 쓸 수 있다. 새로 구현 - 필터된리스트의 getItemId할거다. 지우면 안되는 부분
     public long getItemId(int position) {
         return list.get(position).hashCode();
     }
@@ -104,7 +105,7 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
         if(filteredIndex == null || filteredIndex.isEmpty()){ //필터링을 한번도 사용하지않았거나 필터했다가 지웠을 때
             filteredIndex = new ArrayList<>();
             for (int i = 0; i < backupList.size(); i++) {
-                //백업리스트랑 index일치
+                //백업리스트랑 index일치시켜준다
                 filteredIndex.add(i);
             }
         }
@@ -208,7 +209,7 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
             if(isFiltered){
                 /**근데 이렇게 해주면 list데이터가 결과적으로는 이상해지는거아닌가... 근데 어차피 filter될때마다 clear되고있긴한데
                 그렇게 어차피 필터안돼있을때는 기존 oldIndex가 삭제돼서 이건 화면처리상으로만 문제있을듯
-                새로 뿌려지는 index가 필요함 근데 new 는 맨날 -1만 반환하니 ㅠ
+                새로 뿌려지는 index가 필요함 근데 new 는 맨날 -1만 반환하니
                 리스트는 새로뿌려진거 기준으로 2갠데 3번째 인덱스 삭제하려니 오류
                 여기선 getFilteredList의 반대로 oldIndex를 새로뿌려진뷰의 인덱스로 바꿔줘야함**/
                 list.remove(filteredIndex.indexOf(oldIndex)); //시도! ->잘삭제됨!!
@@ -279,7 +280,7 @@ public abstract class FilterableFirestoreRecyclerAdapter<T, VH extends RecyclerV
     }
 
     public class CustomFilter extends Filter {
-        //여기서 검색된 item을 걸러주는거같은데 여기서 adapter position같은 연결기능이없어서 수정 삭제가 이상하게되나?
+        //여기서 검색된 item을 걸러주는곳. 여기서 adapter position같은 연결기능이없어서 수정 삭제가 이상하게되나?
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {

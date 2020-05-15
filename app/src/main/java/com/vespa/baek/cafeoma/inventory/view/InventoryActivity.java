@@ -39,18 +39,19 @@ import java.util.Locale;
 
 public class InventoryActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private FirebaseFirestore db;
-    private InventoryAdapter adapter;
+    //[View]
     private Button btn_add;
     private EditText et_search;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private InventoryAdapter adapter;
 
-    //test
+    //[Auth]
     private FirebaseAuth mAuth;
     private String userUid;
     private String userEmail;
     private String invenId;
+    private FirebaseFirestore db;
 
 
     @Override
@@ -62,13 +63,12 @@ public class InventoryActivity extends AppCompatActivity {
         btn_add = findViewById(R.id.btn_add);
         et_search = findViewById(R.id.et_search);
 
-        btn_add.setOnClickListener(view -> onClick(view));
-
+        btn_add.setOnClickListener(v -> onClick(v));
 
         recyclerView = findViewById(R.id.inventoryView);
         db = FirebaseFirestore.getInstance(); // 파이어스토어 연동
 
-        //계정 정보 ( 이메일, uid , invenId)초기화
+        //계정 정보 ( 이메일, uid , invenId) 초기화
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         userEmail = currentUser.getEmail();
@@ -84,29 +84,21 @@ public class InventoryActivity extends AppCompatActivity {
 
     }
 
-    //onCreate끝
-
     //[어댑터, 뷰 초기화하는부분]
     public void initView() {
-        // 하위컬렉션 접근하려면 이렇게. 데이터를 이름순으로 정렬해서 뿌려줌
+
         Query query = db.collection("Inventory").document(invenId).collection("InventoryItem").orderBy("name", Query.Direction.ASCENDING);
-        //RecyclerOptions 요기 옵션을 넣기 때문에 파이어스토어 어댑터를 따로 써야함
 
         FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                 .setQuery(query, Item.class)
                 .build();
 
-
-
-        //^InventoryAdapter로 옮긴부분^ 04.13
         adapter = new InventoryAdapter(options,this);
-
-        //위치 일로 옮겨봄
         layoutManager = new newLinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true); //리사이클러뷰 기존성능강화
         recyclerView.setAdapter(adapter);
-        et_search.addTextChangedListener(new TextWatcher() {
+        et_search.addTextChangedListener(new TextWatcher() { // editText에 필터기능 설정
 
 
             @Override
@@ -135,7 +127,7 @@ public class InventoryActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening(); // 어댑터가 stopListening(?)할수잇게게
+        adapter.stopListening(); // 어댑터가 stopListening 할수잇게
 
     }
 
@@ -143,15 +135,7 @@ public class InventoryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        if (et_search.getText().toString() != "") {
-//            adapter.startListening();
-//        } else {
-//            String text = et_search.getText().toString()
-//
-//                    .toLowerCase(Locale.getDefault());
-//            adapter.getFilter().filter(text);
-//        }
-        et_search.setText(""); // 초기화 하는게 깔끔하다
+        et_search.setText(""); // 초기화 하는게 깔끔하다 다른 어플 다녀오면 실행되는 부분
         adapter.startListening();
 
     }

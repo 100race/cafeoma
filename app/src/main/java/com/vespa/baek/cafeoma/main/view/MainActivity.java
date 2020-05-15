@@ -45,13 +45,6 @@ import java.security.MessageDigest;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    private Context mContext;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private UserModel um;
-    private String userUid;
-    private String userEmail;
-
     //[View]
     private Button btn_toShop;
     private Button btn_toMemo;
@@ -60,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog alert;
     private ProgressDialog progressDialog;
 
+    //[Auth]
+    private Context mContext;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private UserModel um;
+    private String userUid;
+    private String userEmail;
 
 
     //뒤로가기변수
@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         }else {
 
             userEmail = currentUser.getEmail();
-            userUid = currentUser.getUid(); // 로그아웃했다가 새로 로그인하면 달라지나?
-            Log.d("확인", userEmail); //->잘뜨는데??
+            userUid = currentUser.getUid();
+            Log.d("확인", userEmail);
 
             um = new UserModel();
             um.checkUser(db, userUid, userEmail);

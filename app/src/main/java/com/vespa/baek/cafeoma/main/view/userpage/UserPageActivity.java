@@ -68,6 +68,7 @@ public class  UserPageActivity extends AppCompatActivity {
     private AlertDialog alert;
     private ProgressDialog progressDialog;
 
+    //[Auth]
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private String userUid;

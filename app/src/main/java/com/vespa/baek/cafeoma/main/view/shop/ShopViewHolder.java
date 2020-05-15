@@ -66,7 +66,6 @@ public class ShopViewHolder  extends RecyclerView.ViewHolder implements View.OnC
 
             switch (item.getItemId()) {
                 case 1001: //수정 - 다이얼로그를 띄워서 바로 수정할 수 있게
-                    //context = getApplicationContext(); dialog만들 때 getApplicationContext쓰면 에러
 
                     db= FirebaseFirestore.getInstance();
                     documentId = adapter.getSnapshots().getSnapshot(getAdapterPosition()).getReference().getId();
@@ -78,9 +77,9 @@ public class ShopViewHolder  extends RecyclerView.ViewHolder implements View.OnC
                     View view = LayoutInflater.from(context)
                             .inflate(R.layout.edit_box, null, false);
                     builder.setView(view);
-                    final Button ButtonSubmit = (Button) view.findViewById(R.id.btn_dialog_submit);
-                    final EditText et_dialog_shopName = (EditText) view.findViewById(R.id.et_dialog_shopName);
-                    final EditText et_dialog_shopUrl = (EditText) view.findViewById(R.id.et_dialog_shopUrl);
+                    final Button ButtonSubmit = view.findViewById(R.id.btn_dialog_submit);
+                    final EditText et_dialog_shopName = view.findViewById(R.id.et_dialog_shopName);
+                    final EditText et_dialog_shopUrl = view.findViewById(R.id.et_dialog_shopUrl);
 
                     // 6. 해당 줄에 입력되어 있던 데이터를 불러와서 다이얼로그에
 

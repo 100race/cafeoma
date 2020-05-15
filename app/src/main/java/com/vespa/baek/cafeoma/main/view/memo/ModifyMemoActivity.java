@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class ModifyMemoActivity extends AppCompatActivity {
     private final String TAG = "ModifyMemoActivity";
-    //[VIEW]
+    //[View]
     private EditText et_title;
     private EditText et_contents;
     private Button btn_save;
@@ -38,6 +38,7 @@ public class ModifyMemoActivity extends AppCompatActivity {
     private Memo memo;
     private MemoModel memoModel;
 
+    //[Auth]
     private FirebaseFirestore db;
     private Intent intent;
     private String documentId;
@@ -146,33 +147,3 @@ public class ModifyMemoActivity extends AppCompatActivity {
     }
 }
 
-
-
-
-
-//    Intent intent = new Intent(context, ModifyMemoActivity.class);
-//        intent.putExtra("ID",adapter.getSnapshots().getSnapshot(getAdapterPosition()).getReference().getId());
-//                context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//
-//                db= FirebaseFirestore.getInstance();
-//                documentId = adapter.getSnapshots().getSnapshot(getAdapterPosition()).getReference().getId();
-//
-//
-//                String title = String.valueOf(adapter.getSnapshots().getSnapshot(getAdapterPosition()).get("shopName"));
-//                String contents = String.valueOf(adapter.getSnapshots().getSnapshot(getAdapterPosition()).get("shopUrl"));
-//                Memo memo = new Memo(title,contents);
-//
-//
-//
-//
-//                String strName = et_dialog_shopName.getText().toString();
-//                String strURl = et_dialog_shopUrl.getText().toString();
-//                Shop shop = new Shop(strName, strURl);
-//
-//                // 8. firebase에 있는 데이터를 변경하고
-//                new ShopModel().updateShop(shop,db,documentId);
-//
-//
-//                // 9. 어댑터에서 RecyclerView에 반영하도록
-//
-//                adapter.notifyItemChanged(getAdapterPosition());

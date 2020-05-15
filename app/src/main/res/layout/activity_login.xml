@@ -30,7 +30,7 @@
         ></Button>
 
     <Button
-        android:id="@+id/email_login_button"
+        android:id="@+id/btn_emailLogin"
         android:layout_width="305dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"

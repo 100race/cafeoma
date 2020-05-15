@@ -30,7 +30,6 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shop, ShopViewHolder> 
     public ShopAdapter(@NonNull FirestoreRecyclerOptions<Shop> options, Context context) {
         super(options);
         this.context = context;
-  //      setHasStableIds(true);
     }
 
     @NonNull

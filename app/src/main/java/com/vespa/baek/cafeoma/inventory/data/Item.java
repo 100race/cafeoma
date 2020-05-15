@@ -1,6 +1,6 @@
 package com.vespa.baek.cafeoma.inventory.data;
 
-public class Item { //내부 멤버변수를 private로 선언했음 보안을 위하여
+public class Item { //내부 멤버변수를 private로 선언 보안을 위하여
     private String image;
     private String name;
     private long quantity;

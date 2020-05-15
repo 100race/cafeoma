@@ -33,7 +33,7 @@ public class ShopModel {
 
     //[ShopActivity]
 
-    //수정
+    //[수정]
     public void updateShop(Shop shop, FirebaseFirestore db, String documentId){
         Map<String, Object> map = new HashMap<>();
         setInvenId();
@@ -42,34 +42,30 @@ public class ShopModel {
         map.put("shopName", shop.getShopName());
         map.put("shopUrl", shop.getShopUrl());
 
-        //핸들러를 써서 실행에 딜레이를 살짝 줌
+        // 딜레이를 줌
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                //임시경로
                 db.collection("Inventory").document(invenId).collection("ShopUrl")
                         .document(documentId).update(map);
             }
         }, 2000);
     }
 
-    //삭제 - storage 와 firestore 둘 다 삭제
+    //[삭제] - storage 와 firestore 둘 다 삭제
     public void deleteShop(ShopAdapter adapter, int position) {
         this.adpater = adapter;
         DocumentSnapshot snapshot = adapter.getSnapshots().getSnapshot(position);
         snapshot.getReference().delete();
-        //adapter.getSnapshots().getSnapshot(position).getReference().delete();
-
     }
 
-    //저장버튼 누르면 실행될것. editText에 있는 정보를 다 담아와 db에 push해준다
+    //[저장]
     public void saveShop(Shop shop, FirebaseFirestore db) {
         setInvenId();
         Map<String, Object> map = new HashMap<>();
         map.put("shopName", shop.getShopName());
         map.put("shopUrl", shop.getShopUrl());
 
-        // Add a new document with a generated ID
         db.collection("Inventory").document(invenId).collection("ShopUrl")
                 .add(map)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

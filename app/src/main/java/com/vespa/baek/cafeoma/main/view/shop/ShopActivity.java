@@ -27,7 +27,7 @@ import com.vespa.baek.cafeoma.main.view.shop.data.ShopModel;
 
 
 public class ShopActivity extends AppCompatActivity {
-
+    //[View]
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager gridLayoutManager;
     private FirebaseFirestore db;
@@ -35,7 +35,7 @@ public class ShopActivity extends AppCompatActivity {
     private ImageButton btn_add;
     private ImageButton btn_back;
 
-    //test
+    //[Auth]
     private FirebaseAuth mAuth;
     private String userUid;
     private String userEmail;
@@ -81,7 +81,7 @@ public class ShopActivity extends AppCompatActivity {
         // 한줄에 3개의 컬럼을 추가
         int numberOfColumns = 3;
         gridLayoutManager = new GridLayoutManager(this,numberOfColumns);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(gridLayoutManager); // 그리드레이아웃매니저로 바둑판식배열
         recyclerView.setHasFixedSize(true); //리사이클러뷰 기존성능강화
         recyclerView.setAdapter(adapter);
 
@@ -90,7 +90,7 @@ public class ShopActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening(); // 어댑터가 stopListening(?)할수잇게게
+        adapter.stopListening();
     }
 
 
@@ -111,6 +111,7 @@ public class ShopActivity extends AppCompatActivity {
         }
     }
 
+    //[Url 추가 다이얼로그]
     public void addShopDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(ShopActivity.this);
 

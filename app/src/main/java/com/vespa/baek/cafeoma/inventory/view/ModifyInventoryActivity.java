@@ -57,7 +57,7 @@ import java.util.Objects;
  */
 public class ModifyInventoryActivity extends AppCompatActivity {
 
-    private final String TAG = "permission";
+    private final String TAG = "ModifyInventoryActivity";
     private final static String defaultImage = "";
     private final int GET_GALLERY_IMAGE = 200;
     private final int CAMERA_IMAGE = 201;
@@ -74,7 +74,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private ItemModel itemModel;
     private AlertDialog alert;
 
-
+    //[Auth]
     private FirebaseFirestore db;
     private Intent intent;
     private Uri selectedImageUri; // 갤러리에서 받아온 이미지를 저장 버튼 누를때까지 저장할 로컬장소 -> onCreate때 초기화시킬것임
@@ -82,7 +82,6 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private String documentId;
     private static String invenId;
-
     private FirebaseStorage firebaseStorage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
@@ -108,7 +107,6 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         //item, itemModel 객체 초기화 안하고 써서 오류남;
-
         item = new Item();
         itemModel = new ItemModel();
 
@@ -124,12 +122,11 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         btn_save = findViewById(R.id.btn_save);
         btn_cancel = findViewById(R.id.btn_cancel);
 
-        //시작시 수정버튼으로 시작했으면(intent로 getExtra했는데 null이아니라 받아온게있으먄, 왜냐면 intent는 둘다 전해줌) 받아온 데이터 뿌려주는 초기화
+        //시작시 수정버튼으로 시작했으면(intent로 getExtra했는데 null이아니라 받아온게있으면, 왜냐면 intent는 둘다 전해줌) 받아온 데이터 뿌려주는 초기화
         if (intent.getExtras() != null || isModify == true) {
-            //수정버튼으로 받아온 어댑터에존재하는 문서의 아이디
+            //수정버튼으로 받아온 어댑터에 존재하는 문서의 아이디
             isModify = true;
             documentId = intent.getExtras().getString("ID");
-            //임시경로임
             //어댑터의 문서의 내용을 item에 저장한후
             DocumentReference docref = db.collection("Inventory").document(invenId).collection("InventoryItem").document(documentId);
             docref.get()
@@ -295,7 +292,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     }
 
 
-    //사진촬영할지 갤러리에서 가져올 지 기본이미지를 할지 선택
+    //[사진촬영할지 갤러리에서 가져올 지 기본이미지를 할지 선택]
     private void photoDialogRadio() {
         final CharSequence[] PhotoModels = {"사진 촬영", "갤러리에서 가져오기","기본이미지"};
         AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
@@ -322,7 +319,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         alert.show();
     }
 
-    //사진촬영/갤러리 선택해 온 결과 받는부분
+    //[사진촬영/갤러리 결과 받는부분]
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -364,7 +361,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
 
 
 
-    //사진권한 받은 후 처리
+    //[사진권한 받은 후 처리]
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -378,7 +375,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
 
 
 
-    //사진 찍기 클릭시 이벤트
+    //[사진 찍기 클릭시 이벤트]
     public void takePhoto(){
 
         // 촬영 후 이미지 가져옴
@@ -399,15 +396,10 @@ public class ModifyInventoryActivity extends AppCompatActivity {
                     imageUri = providerURI;
                     intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, providerURI);
                     startActivityForResult(intent, CAMERA_IMAGE);
-
                 }
-
             }
-
         }else{
-
-            Log.v("알림", "저장공간에 접근 불가능");
-
+            Log.v(TAG, "저장공간에 접근 불가능");
             return;
 
         }
@@ -421,10 +413,10 @@ public class ModifyInventoryActivity extends AppCompatActivity {
         File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ireh");
         if(!storageDir.exists()){
             //없으면 만들기
-            Log.v("알림","storageDir 존재 x " + storageDir.toString());
+            Log.v(TAG,"storageDir 존재 x " + storageDir.toString());
             storageDir.mkdirs();
         }
-        Log.v("알림","storageDir 존재함 " + storageDir.toString());
+        Log.v(TAG,"storageDir 존재함 " + storageDir.toString());
         imageFile = new File(storageDir,imgFileName);
         currentPhotoPath = imageFile.getAbsolutePath();
         return imageFile;
@@ -443,6 +435,7 @@ public class ModifyInventoryActivity extends AppCompatActivity {
     }
 
     //[invenId가져오기]
+
     public void setInvenId(){
         this.invenId = UserModel.invenId;
     }

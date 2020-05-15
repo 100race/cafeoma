@@ -53,9 +53,9 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private CallbackManager mCallbackManager;                                                        //글로벌로 선언 해줘야됨
-    private static final String TAG = "Login";                                                      //로그인과 관련된 로그 태그
-    private static final int RC_LOGIN = 100;                                                      //ResultCode_LOGIN - google관련코드
+    private CallbackManager mCallbackManager;   //글로벌로 선언 해줘야됨
+    private static final String TAG = "Login";   //로그인과 관련된 로그 태그
+    private static final int RC_LOGIN = 100;  //ResultCode_LOGIN - google관련코드
 
     //[View]
     private Button btn_ggLogin;
@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_email_login;
     private EditText emailbox;
 
+    //[Auth]
     private ActionCodeSettings mActionCodeSettings;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -82,13 +83,10 @@ public class LoginActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(this);
 
 
-        // Google login 버튼추가
-        btn_ggLogin =  findViewById(R.id.btn_ggLogin);
-
-        // Email login 버튼추가
-        btn_email_login = findViewById(R.id.email_login_button);
-        btn_email_login.setOnClickListener((v)->onClick(v));
+        // [Email 로그인 초기화]
+        btn_email_login = findViewById(R.id.btn_emailLogin);
         emailbox = findViewById(R.id.emailbox);
+        btn_email_login.setOnClickListener((v)->onClick(v));
         emailbox.setOnClickListener(v->onClick(v));
 
         // [Facebook 로그인 초기화]
@@ -97,9 +95,10 @@ public class LoginActivity extends AppCompatActivity {
         btn_fbLogin.setOnClickListener(v->onClick(v));
 
 
-
-
         // [구글 로그인 초기화]
+
+        btn_ggLogin =  findViewById(R.id.btn_ggLogin);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))                                          //구글링으로 추가해준라인
                 .requestEmail()
@@ -144,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
             case R.id.btn_ggLogin:
                 signIn();
                 break;
-            case R.id.email_login_button:
+            case R.id.btn_emailLogin:
                 emailLogin();
                 break;
 
