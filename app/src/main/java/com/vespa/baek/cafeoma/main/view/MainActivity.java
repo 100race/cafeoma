@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 
 import android.app.ProgressDialog;
@@ -36,6 +37,7 @@ import com.vespa.baek.cafeoma.inventory.view.InventoryActivity;
 import com.vespa.baek.cafeoma.main.data.UserModel;
 import com.vespa.baek.cafeoma.main.view.memo.MemoActivity;
 import com.vespa.baek.cafeoma.main.view.shop.ShopActivity;
+import com.vespa.baek.cafeoma.main.view.userpage.UserPageActivity;
 
 import java.security.MessageDigest;
 
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     //[View]
     private Button btn_toShop;
     private Button btn_toMemo;
-    private Button btn_logout;
     private Button btn_toInventory;
     private Button btn_toUserPage;
     private AlertDialog alert;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    //뒤로가기버튼관련변수
+    //뒤로가기변수
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
     // 첫 번째 뒤로가기 버튼을 누를때 표시
@@ -80,15 +81,12 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
-        btn_logout = (Button) findViewById(R.id.btn_logout);
         btn_toInventory = findViewById(R.id.btn_toInventory);
         btn_toUserPage = findViewById(R.id.btn_toUserPage);
         btn_toMemo = findViewById(R.id.btn_toMemo);
         btn_toShop = findViewById(R.id.btn_toShop);
 
         btn_toInventory.setOnClickListener(v -> onClick(v));
-        btn_logout.setOnClickListener(v -> onClick(v));
         btn_toUserPage.setOnClickListener(v -> onClick(v));
         btn_toMemo.setOnClickListener(v -> onClick(v));
         btn_toShop.setOnClickListener(v -> onClick(v));
@@ -133,28 +131,16 @@ public class MainActivity extends AppCompatActivity {
         // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
         // 현재 표시된 Toast 취소
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-            finish();
+            ActivityCompat.finishAffinity(MainActivity.this);
+            System.exit(0);
             toast.cancel();
         }
     }
 
 
-    // [로그아웃] - 페이스북 로그아웃 제대로 안되는거같기도
-    public void logOut() {
-        FirebaseAuth.getInstance().signOut();
-        FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
-        Log.d("LOGOUT", "로그아웃성공");
-        if (currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
-        }
-    }
-
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_logout:
-                logOut();
-                break;
+
             case R.id.btn_toInventory:
                 progressDialog.show();
                 db.collection("User").document(userUid)
@@ -189,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 break;
             case R.id.btn_toUserPage:
-                Intent intent = new Intent(getApplicationContext(),UserPageActivity.class);
+                Intent intent = new Intent(getApplicationContext(), UserPageActivity.class);
                 startActivity(intent);
                 break;
 

@@ -6,23 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".main.view.MainActivity">
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="290dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="195dp"
-        android:text="logout"
-        app:layout_constraintBottom_toTopOf="@+id/btn_toInventory"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_toInventory"
         android:layout_width="208dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="350dp"
+        android:layout_marginBottom="492dp"
         android:text="재고관리"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_logout"
         app:layout_constraintVertical_bias="0.494" />
-
 
     <Button
         android:id="@+id/btn_toShop"
@@ -54,14 +42,14 @@
         app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
-        app:layout_constraintTop_toBottomOf="@+id/btn_toInventory"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_toShop"
+        app:layout_constraintVertical_bias="0.318" />
 
     <Button
         android:id="@+id/btn_toUserPage"
         android:layout_width="198dp"
         android:layout_height="52dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="216dp"
         android:text="사용자페이지"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"

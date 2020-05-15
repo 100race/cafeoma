@@ -19,12 +19,11 @@ import com.vespa.baek.cafeoma.R;
 
 
 public class NotifyEmailSendActivity extends AppCompatActivity {
-
-    private static final String TAG = "Login";                                                      //로그인과 관련된 로그 태그
+    private static final String TAG = "Login";
     ActionCodeSettings mActionCodeSettings;
     private FirebaseAuth mAuth;
     private String email;
-    Button resendbtn;
+    private Button btn_resend;
 
 
     @Override
@@ -32,9 +31,8 @@ public class NotifyEmailSendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify_email_send);
 
-        resendbtn = (Button)findViewById(R.id.resend_button);
-        resendbtn.setOnClickListener(view -> onClick(view));
-
+        btn_resend = findViewById(R.id.resend_button);
+        btn_resend.setOnClickListener(v -> onClick(v));
 
     }
 
@@ -49,46 +47,36 @@ public class NotifyEmailSendActivity extends AppCompatActivity {
         //이메일 다시보내주기
         sendSignInLink(email,mActionCodeSettings);
 
-
     }
 
     public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
-        // [START auth_send_sign_in_link]
         FirebaseAuth auth = FirebaseAuth.getInstance();
-
 
         auth.sendSignInLinkToEmail(email, actionCodeSettings)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "이메일 다시 보냄");
+                            Log.d(TAG, "이메일 재전송");
                             Toast.makeText(NotifyEmailSendActivity.this,"이메일 링크를 재전송 했습니다. 이메일을 확인해주세요",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-        // [END auth_send_sign_in_link]
     }
 
     public void buildActionCodeSettings() {
-        // [START auth_build_action_code_settings]
         mActionCodeSettings =
                 ActionCodeSettings.newBuilder()
-                        // URL you want to redirect back to. The domain (www.example.com) for this
-                        // URL must be whitelisted in the Firebase Console. -했어
-                        .setUrl("https://www.example.com") //이게맞는진몰겠음 - 내생각에는 컴퓨터에서 열릴 코드인듯 설정안했더니 오류나서 다시써봄
+                        // 리다이렉트 되길 원하는 도메인을 Url에 등록
+                        // URL을 반드시 승인된 화이트리스트에 등록해줘야함. 이거랑 도메인 등록해줌 @@해결
+                        .setUrl("https://www.example.com") // 컴퓨터에서 열릴 코드인듯 설정안했더니 오류나서 다시써봄
                         // This must be true
                         .setHandleCodeInApp(true)
                         .setAndroidPackageName(
-                                "com.vespa.baek.cafeoma", //여기서 패키지네임 마지막에 android가 들어가야하는지 모르겠음 다른곳엔 ios써있길래 - 왠지 안들어갈거같아서 지움
-                                true, /* installIfNotAvailable */
-                                "22"    /* minimumVersion */)
+                                "com.vespa.baek.cafeoma",
+                                true, // 설치안되어있으면 설치페이지로 이동시켜주는곳
+                                "22"  ) //minVersion
                         .build();
-        // [END auth_build_action_code_settings]
     }
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-    }
 }

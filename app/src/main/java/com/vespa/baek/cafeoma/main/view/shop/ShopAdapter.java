@@ -50,7 +50,7 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shop, ShopViewHolder> 
         holder.ll_shop.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    if (model.getShopUrl() != null) {
+                                                    if (model.getShopUrl() != "" && model.getShopUrl() != null) {
                                                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getShopUrl()));
                                                         v.getContext().startActivity(intent);
                                                     } else {

@@ -8,25 +8,26 @@
     tools:context=".login.LoginActivity"
     >
 
-
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/facebook_login_button"
+    <Button
+        android:id="@+id/btn_fbLogin"
         android:layout_width="305dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="200dp"
+        android:text="페이스북로그인"
          />
 
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/google_login_button"
+    <Button
+        android:id="@+id/btn_ggLogin"
         android:layout_width="305dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
-        ></com.google.android.gms.common.SignInButton>
+        android:text="구글로그인"
+        ></Button>
 
     <Button
         android:id="@+id/email_login_button"
@@ -46,5 +47,8 @@
         android:layout_marginBottom="15dp"
         android:layout_marginTop="15dp"
         android:visibility="gone"
+        android:hint="이메일 입력"
         />
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>

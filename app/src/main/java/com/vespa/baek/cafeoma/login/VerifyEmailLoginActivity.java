@@ -29,20 +29,16 @@ public class VerifyEmailLoginActivity extends AppCompatActivity {
 
     //링크를 수신하고 이메일 링크 인증을 위한 링크인지 확인하고 로그인을 완료한다.
     public void verifySignInLink() {
-        // [START auth_verify_sign_in_link]
         FirebaseAuth auth = FirebaseAuth.getInstance();
         Intent intent = getIntent();
         String emailLink = intent.getData().toString();
 
         // Confirm the link is a sign-in with email link.
         if (auth.isSignInWithEmailLink(emailLink)) {
-            // Retrieve this from wherever you stored it
             //저장된 프리퍼런스 이메일 데이터를 가져온다
             SharedPreferences pref = getSharedPreferences("email", Activity.MODE_PRIVATE);
             String email = pref.getString("user-email", "");
 
-
-            // The client SDK will parse the code from the link for you.
             auth.signInWithEmailLink(email, emailLink)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -50,20 +46,20 @@ public class VerifyEmailLoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Log.d("LOGIN", "이메일 링크로 로그인 성공");
                                 AuthResult result = task.getResult();
-                                // 사용자 추가 됨 알아서
-                                // You can check if the user is new or existing:
+                                // 사용자 추가 됨
                                 // result.getAdditionalUserInfo().isNewUser()
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
+                                //finish();
                             } else {
                                 Log.e("LOGIN", "이메일 링크로 로그인 실패", task.getException());
                                 Toast.makeText(getApplicationContext(), "만료된 링크입니다", Toast.LENGTH_SHORT);
                                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
+                                //finish();
                             }
                         }
                     });
         }
-        // [END auth_verify_sign_in_link]
     }
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -118,9 +119,9 @@ public class ShopActivity extends AppCompatActivity {
         View view = LayoutInflater.from(ShopActivity.this)
                 .inflate(R.layout.edit_box, null, false);
         builder.setView(view);
-        final Button ButtonSubmit = (Button) view.findViewById(R.id.btn_dialog_submit);
-        final EditText et_dialog_shopName = (EditText) view.findViewById(R.id.et_dialog_shopName);
-        final EditText et_dialog_shopUrl = (EditText) view.findViewById(R.id.et_dialog_shopUrl);
+        final Button ButtonSubmit =  view.findViewById(R.id.btn_dialog_submit);
+        final EditText et_dialog_shopName =  view.findViewById(R.id.et_dialog_shopName);
+        final EditText et_dialog_shopUrl =  view.findViewById(R.id.et_dialog_shopUrl);
 
         ButtonSubmit.setText("추가");
 
@@ -130,18 +131,23 @@ public class ShopActivity extends AppCompatActivity {
             // 추가 버튼을 클릭하면 현재 UI에 입력되어 있는 내용으로
 
             public void onClick(View v) {
+
                 String strName = et_dialog_shopName.getText().toString();
-                String strURl = et_dialog_shopUrl.getText().toString();
-                Shop shop = new Shop(strName, strURl);
+                String strUrl = et_dialog_shopUrl.getText().toString();
 
-                // firebase에 있는 데이터를 변경하고
-                new ShopModel().saveShop(shop,db);
+                if (strName.length() > 0 && strUrl.length() > 0 ) {
+                    Shop shop = new Shop(strName, strUrl);
 
-                // 어댑터에서 RecyclerView에 반영
+                    // firebase에 있는 데이터를 변경하고
+                    new ShopModel().saveShop(shop, db);
 
-                adapter.notifyDataSetChanged();
+                    // 어댑터에서 RecyclerView에 반영
+                    adapter.notifyDataSetChanged();
 
-                dialog.dismiss();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(ShopActivity.this,"내용을 입력해주세요",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.view.UserPageActivity">
+    tools:context=".main.view.userpage.UserPageActivity">
 
     <Button
         android:id="@+id/btn_secession"
@@ -25,6 +25,7 @@
         android:text="저장소 삭제"
         app:layout_constraintBottom_toTopOf="@+id/btn_secession"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_shareCode" />
 
@@ -33,10 +34,35 @@
         android:layout_width="121dp"
         android:layout_height="39dp"
         android:layout_marginBottom="21dp"
+        android:layout_marginStart="32dp"
         android:text="저장소 코드 공유"
         app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
         app:layout_constraintStart_toStartOf="@+id/tv_userEmail"
         app:layout_constraintTop_toBottomOf="@+id/tv_userEmail" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="108dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="142dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginStart="1dp"
+        android:text="로그아웃"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_secession"
+        app:layout_constraintStart_toStartOf="@+id/btn_secession"
+        app:layout_constraintTop_toBottomOf="@+id/btn_secession" />
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="?attr/homeAsUpIndicator" />
 
     <ImageView
         android:id="@+id/iv_userId"
@@ -52,34 +78,16 @@
 
     <TextView
         android:id="@+id/tv_userEmail"
-        android:layout_width="143dp"
-        android:layout_height="27dp"
-        android:layout_marginBottom="51dp"
-        android:layout_marginEnd="132dp"
+        android:layout_width="181dp"
+        android:layout_height="26dp"
+        android:layout_marginBottom="223dp"
+        android:layout_marginEnd="112dp"
+        android:layout_marginTop="304dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/btn_shareCode"
+        app:layout_constraintBottom_toTopOf="@+id/btn_logout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/iv_userId" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="81dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="62dp"
-        android:text="로그인 계정 :"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_userEmail"
-        app:layout_constraintEnd_toStartOf="@+id/tv_userEmail"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/homeAsUpIndicator" />
+        android:gravity="center_horizontal" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

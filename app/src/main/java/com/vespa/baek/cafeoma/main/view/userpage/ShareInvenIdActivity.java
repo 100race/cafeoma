@@ -1,4 +1,4 @@
-package com.vespa.baek.cafeoma.main.view;
+package com.vespa.baek.cafeoma.main.view.userpage;
 
 import androidx.appcompat.app.AppCompatActivity;
 

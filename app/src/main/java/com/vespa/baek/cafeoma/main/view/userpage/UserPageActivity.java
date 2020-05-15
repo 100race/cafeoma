@@ -1,4 +1,4 @@
-package com.vespa.baek.cafeoma.main.view;
+package com.vespa.baek.cafeoma.main.view.userpage;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +38,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.vespa.baek.cafeoma.login.LoginActivity;
 import com.vespa.baek.cafeoma.R;
 import com.vespa.baek.cafeoma.main.data.UserModel;
+import com.vespa.baek.cafeoma.main.view.MainActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 public class  UserPageActivity extends AppCompatActivity {
     private static final String TAG = "UserPageActivity";
     private final static String defaultImage = "";
+    private boolean confirmDel;
 
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4,
             60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
@@ -59,6 +62,7 @@ public class  UserPageActivity extends AppCompatActivity {
     private Button btn_secession;
     private Button btn_delCollection;
     private Button btn_shareCode;
+    private Button btn_logout;
     private ImageButton btn_back;
     private TextView tv_userEmail;
     private AlertDialog alert;
@@ -80,11 +84,13 @@ public class  UserPageActivity extends AppCompatActivity {
         btn_secession = findViewById(R.id.btn_secession);
         btn_back = findViewById(R.id.btn_back);
         tv_userEmail = findViewById(R.id.tv_userEmail);
+        btn_logout = findViewById(R.id.btn_logout);
 
         btn_secession.setOnClickListener(v->onClick(v));
         btn_delCollection.setOnClickListener(v->onClick(v));
         btn_shareCode.setOnClickListener(v->onClick(v));
         btn_back.setOnClickListener(v->onClick(v));
+        btn_logout.setOnClickListener(v->onClick(v));
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -96,6 +102,7 @@ public class  UserPageActivity extends AppCompatActivity {
         tv_userEmail.setText(userEmail);
 
         initProgDialog();
+
 
     }
 
@@ -155,9 +162,27 @@ public class  UserPageActivity extends AppCompatActivity {
                 }, 2000);
 
                 break;
+            case R.id.btn_logout:
+                logOut();
+                break;
             case R.id.btn_back:
                 finish();
                 break;
+        }
+    }
+
+    // [로그아웃]
+    public void logOut() {
+        FirebaseAuth.getInstance().signOut();
+        if (LoginManager.getInstance() != null) {
+            LoginManager.getInstance().logOut();
+        }
+        FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
+        Log.d("LOGOUT", "로그아웃성공");
+        if (currentUser == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 
@@ -179,15 +204,15 @@ public class  UserPageActivity extends AppCompatActivity {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 //dismiss 되면서 부를 progressDialog. 삭제구현하는부분
+                    if(confirmDel) {
+                        progressDialog = new ProgressDialog(UserPageActivity.this);
+                        progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
+                        progressDialog.setCancelable(false);
+                        progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
 
-                    progressDialog = new ProgressDialog(UserPageActivity.this);
-                    progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
-                    progressDialog.setCancelable(false);
-                    progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
-
-                    progressDialog.show();
-                    deleteAll(true);
-
+                        progressDialog.show();
+                        deleteAll(true);
+                    }
             }
         });
 
@@ -196,17 +221,21 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
+                                confirmDel = true;
                                 alert.dismiss();
+
                             }
                         })
                 .setNegativeButton("취소",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //취소
+                                confirmDel = false;
                                 alert.cancel();
+                                progressDialog.dismiss();
                             }
                         });
-
+        confirmDel = false;
         alert = alt_builder.create();
         alert.show();
     }
@@ -220,19 +249,20 @@ public class  UserPageActivity extends AppCompatActivity {
         alt_builder.setTitle("저장소 삭제 확인");
         alt_builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
+
             @Override
             public void onDismiss(DialogInterface dialog) {
                 //dismiss 되면서 부를 progressDialog
+                if(confirmDel) {
+                    progressDialog = new ProgressDialog(UserPageActivity.this);
+                    progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
+                    progressDialog.setCancelable(false);
+                    progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
 
-                progressDialog = new ProgressDialog(UserPageActivity.this);
-                progressDialog.setMessage("저장소 삭제중... 어플을 종료하지 마세요");
-                progressDialog.setCancelable(false);
-                progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
-
-                progressDialog.show();
-                deleteAll(false);
-                 //dismiss 위치를 deleteAll 로 옮김
-
+                    progressDialog.show();
+                    deleteAll(false);
+                    //dismiss 위치를 deleteAll 로 옮김
+                }
             }
         });
 
@@ -241,6 +271,7 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //삭제
+                                confirmDel = true; // dismiss와 cancel 이후에 안전장치 하나 더
                                 alert.dismiss();
                             }
                         })
@@ -248,11 +279,13 @@ public class  UserPageActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) { //취소
+                                confirmDel = false;
                                 alert.cancel();
+                                progressDialog.dismiss();
                             }
                         });
 
-
+        confirmDel = false;
         alert = alt_builder.create();
         alert.show();
     }
@@ -373,7 +406,7 @@ public class  UserPageActivity extends AppCompatActivity {
 
     //[컬렉션삭제]
     private void deleteCollection(final String path) {
-        //InventoryItem컬렉션(및 하위문서) 삭제 - 실행순서 제어 해야되나? 컬렉션삭제부터 하고 문서삭제해야되는지
+        //InventoryItem컬렉션(및 하위문서) 삭제
         deleteCollection(db.collection(path), 50, EXECUTOR);
 
     }
@@ -453,58 +486,8 @@ public class  UserPageActivity extends AppCompatActivity {
         });
     }
 
-    public void exampleData() {
-        // [START example_data]
-        CollectionReference cities = db.collection("cities");
 
-        Map<String, Object> data1 = new HashMap<>();
-        data1.put("name", "San Francisco");
-        data1.put("state", "CA");
-        data1.put("country", "USA");
-        data1.put("capital", false);
-        data1.put("population", 860000);
-        data1.put("regions", Arrays.asList("west_coast", "norcal"));
-        cities.document("SF").set(data1);
-
-        Map<String, Object> data2 = new HashMap<>();
-        data2.put("name", "Los Angeles");
-        data2.put("state", "CA");
-        data2.put("country", "USA");
-        data2.put("capital", false);
-        data2.put("population", 3900000);
-        data2.put("regions", Arrays.asList("west_coast", "socal"));
-        cities.document("LA").set(data2);
-
-        Map<String, Object> data3 = new HashMap<>();
-        data3.put("name", "Washington D.C.");
-        data3.put("state", null);
-        data3.put("country", "USA");
-        data3.put("capital", true);
-        data3.put("population", 680000);
-        data3.put("regions", Arrays.asList("east_coast"));
-        cities.document("DC").set(data3);
-
-        Map<String, Object> data4 = new HashMap<>();
-        data4.put("name", "Tokyo");
-        data4.put("state", null);
-        data4.put("country", "Japan");
-        data4.put("capital", true);
-        data4.put("population", 9000000);
-        data4.put("regions", Arrays.asList("kanto", "honshu"));
-        cities.document("TOK").set(data4);
-
-        Map<String, Object> data5 = new HashMap<>();
-        data5.put("name", "Beijing");
-        data5.put("state", null);
-        data5.put("country", "China");
-        data5.put("capital", true);
-        data5.put("population", 21500000);
-        data5.put("regions", Arrays.asList("jingjinji", "hebei"));
-        cities.document("BJ").set(data5);
-        // [END example_data]
-    }
-
-    // [START delete_collection]
+    // [컬렉션 삭제]
     /**
      * Delete all documents in a collection. Uses an Executor to perform work on a background
      * thread. This does *not* automatically discover and delete subcollections.
@@ -561,7 +544,6 @@ public class  UserPageActivity extends AppCompatActivity {
 
         return querySnapshot.getDocuments();
     }
-    // [END delete_collection]
 
 
 }

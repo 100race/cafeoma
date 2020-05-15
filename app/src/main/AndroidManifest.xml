@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_cafeoma"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_cafeoma_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".main.view.memo.MemoViewActivity"></activity>
@@ -14,8 +14,8 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".main.view.memo.MemoActivity" />
         <activity android:name=".main.view.shop.ShopActivity" />
-        <activity android:name=".main.view.ShareInvenIdActivity" />
-        <activity android:name=".main.view.UserPageActivity" />
+        <activity android:name=".main.view.userpage.ShareInvenIdActivity" />
+        <activity android:name=".main.view.userpage.UserPageActivity" />
         <activity android:name=".main.view.InputInvenIdActivity" />
         <activity android:name=".inventory.view.ModifyInventoryActivity" />
         <activity
@@ -40,7 +40,8 @@
         </activity>
         <activity
             android:name=".login.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            />
         <activity android:name=".main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
