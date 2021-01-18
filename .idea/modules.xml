@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CafeOma.iml" filepath="$PROJECT_DIR$/CafeOma.iml" group="CafeOma" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="CafeOma/app" />
+      <module fileurl="file://$PROJECT_DIR$/CafeOma.iml" filepath="$PROJECT_DIR$/CafeOma.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CafeOma.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CafeOma.app.iml" />
     </modules>
   </component>
 </project>
