@@ -1,54 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".login.LoginActivity"
+    android:weightSum="2"
     >
 
-    <Button
-        android:id="@+id/btn_fbLogin"
-        android:layout_width="305dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="200dp"
-        android:text="페이스북로그인"
-         />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loginimg" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal|bottom"
+            >
 
 
-    <Button
-        android:id="@+id/btn_ggLogin"
-        android:layout_width="305dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:text="구글로그인"
-        ></Button>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="50dp"
+                android:textStyle="bold|italic"
+                tools:text="CafeOma" />
 
-    <Button
-        android:id="@+id/btn_emailLogin"
-        android:layout_width="305dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:text="이메일 로그인"
-        />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="30dp"
+                android:textColor="#ffffff"
+                android:textSize="15dp"
+                tools:text="카페 재고관리 어플리케이션" />
 
-    <EditText
-        android:id="@+id/emailbox"
-        android:layout_width="305dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        android:hint="이메일 입력"
-        />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_weight="0.3">
+
+        <Button
+            android:id="@+id/btn_ggLogin"
+            android:layout_width="245dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/login_button_design"
+            android:text="구글 로그인"
+            android:textColor="@color/mainDarkBrown" />
+
+        <Button
+            android:id="@+id/btn_fbLogin"
+            android:layout_width="245dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/login_button_design"
+            android:backgroundTint="@color/com_facebook_button_background_color"
+            android:text="페이스북 로그인"
+            android:textColor="#ffff" />
+
+
+        <Button
+            android:id="@+id/btn_emailLogin"
+            android:layout_width="245dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/login_button_design"
+            android:backgroundTint="@color/mainDarkBrown"
+            android:textColor="#ffff"
+            android:text="  이메일 로그인"
+            />
+
+        <EditText
+            android:id="@+id/emailbox"
+            android:layout_width="245dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/login_button_design"
+            android:visibility="gone"
+            android:hint="이메일 입력"
+             />
+
+    </LinearLayout>
+
+
+
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>
