@@ -38,30 +38,27 @@
 
         <Button
             android:id="@+id/btn_toInventory"
+            android:text="재고관리"
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:layout_margin="5dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="0.5"
-            android:background="@drawable/main_button_design"
-            android:text="재고관리"
             android:drawableTop="@drawable/ic_coffee_bean"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_tostartOf="@+id/btn_toShop"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:background="@drawable/main_button_design"
+            />
 
         <Button
             android:id="@+id/btn_toMemo"
+            android:text="메모장"
             android:layout_width="0dp"
             android:layout_height="230dp"
-            android:layout_weight="0.5"
-            android:layout_marginBottom="10dp"
-            android:text="메모장"
-            android:background="@drawable/main_button_design"
             android:layout_margin="5dp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
-            app:layout_constraintStart_toEndOf="@+id/btn_toInventory"
-            app:layout_constraintTop_toBottomOf="@+id/btn_toInventory" />
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_memo"
+            android:background="@drawable/main_button_design"
+            />
 
     </LinearLayout>
 
@@ -74,30 +71,24 @@
 
         <Button
             android:id="@+id/btn_toShop"
+            android:text="쇼핑몰"
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:layout_weight="0.5"
-            android:text="쇼핑몰"
+            android:drawableTop="@drawable/ic_store_rating"
             android:background="@drawable/main_button_design"
-            android:layout_margin="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_toUserPage"
-            app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
-            app:layout_constraintTop_toBottomOf="@+id/btn_toInventory" />
+            android:layout_margin="5dp" />
 
         <Button
             android:id="@+id/btn_toUserPage"
+            android:text="사용자페이지"
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:layout_weight="0.5"
             android:layout_marginBottom="10dp"
-            android:text="사용자페이지"
+            android:drawableTop="@drawable/ic_apron"
             android:background="@drawable/main_button_design"
-            android:layout_margin="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_tostartOf="@+id/btn_toShop"
-            app:layout_constraintStart_toStartOf="@+id/btn_toMemo"
-            app:layout_constraintTop_toBottomOf="@+id/btn_toMemo" />
+            android:layout_margin="5dp" />
 
     </LinearLayout>
 
