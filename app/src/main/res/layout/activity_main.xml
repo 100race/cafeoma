@@ -4,59 +4,104 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.view.MainActivity">
+    tools:context=".main.view.MainActivity"
+    >
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@color/mainDarkBrown"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btn_toInventory"
-        android:layout_width="208dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="492dp"
-        android:text="재고관리"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mainimg"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/Ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/Ll2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout"
-        app:layout_constraintVertical_bias="0.494" />
+        android:layout_marginTop="150dp">
 
-    <Button
-        android:id="@+id/btn_toShop"
-        android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:text="쇼핑몰"
-        app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
-        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/btn_toUserPage"
-        app:layout_constraintTop_toBottomOf="@+id/btn_toInventory"
-        app:layout_constraintVertical_bias="0.21" />
 
-    <Button
-        android:id="@+id/btn_toMemo"
-        android:layout_width="198dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="220dp"
-        android:text="메모장"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
-        app:layout_constraintTop_toBottomOf="@+id/btn_toShop"
-        app:layout_constraintVertical_bias="0.318" />
+        <Button
+            android:id="@+id/btn_toInventory"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/main_button_design"
+            android:text="재고관리"
+            android:drawableTop="@drawable/ic_coffee_bean"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_tostartOf="@+id/btn_toShop"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_toUserPage"
-        android:layout_width="198dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="216dp"
-        android:text="사용자페이지"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_toInventory"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout"
-        app:layout_constraintVertical_bias="0.665" />
+        <Button
+            android:id="@+id/btn_toMemo"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_weight="0.5"
+            android:layout_marginBottom="10dp"
+            android:text="메모장"
+            android:background="@drawable/main_button_design"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_toUserPage"
+            app:layout_constraintStart_toEndOf="@+id/btn_toInventory"
+            app:layout_constraintTop_toBottomOf="@+id/btn_toInventory" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/Ll2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/Ll1"
+        >
+
+        <Button
+            android:id="@+id/btn_toShop"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_weight="0.5"
+            android:text="쇼핑몰"
+            android:background="@drawable/main_button_design"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_toUserPage"
+            app:layout_constraintStart_toStartOf="@+id/btn_toInventory"
+            app:layout_constraintTop_toBottomOf="@+id/btn_toInventory" />
+
+        <Button
+            android:id="@+id/btn_toUserPage"
+            android:layout_width="0dp"
+            android:layout_height="230dp"
+            android:layout_weight="0.5"
+            android:layout_marginBottom="10dp"
+            android:text="사용자페이지"
+            android:background="@drawable/main_button_design"
+            android:layout_margin="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_tostartOf="@+id/btn_toShop"
+            app:layout_constraintStart_toStartOf="@+id/btn_toMemo"
+            app:layout_constraintTop_toBottomOf="@+id/btn_toMemo" />
+
+    </LinearLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
