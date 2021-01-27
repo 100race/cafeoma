@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ public class NotifyEmailSendActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String email;
     private Button btn_resend;
+    private ImageButton btn_back;
 
 
     @Override
@@ -31,22 +33,32 @@ public class NotifyEmailSendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notify_email_send);
 
-        btn_resend = findViewById(R.id.resend_button);
+        btn_back = findViewById(R.id.btn_back);
+        btn_resend = findViewById(R.id.btn_resend);
+        btn_back.setOnClickListener(v->onClick(v));
         btn_resend.setOnClickListener(v -> onClick(v));
 
     }
 
     public void onClick(View v){
-        //액션코드세팅빌드
-        buildActionCodeSettings();
+        switch(v.getId()) {
+            case R.id.btn_resend:
 
-        //프리퍼런스에 저장했던 이메일 넣어주기
-        SharedPreferences pref = getSharedPreferences("email", Activity.MODE_PRIVATE);
-        email = pref.getString("user-email", "");
+                //액션코드세팅빌드
+                buildActionCodeSettings();
 
-        //이메일 다시보내주기
-        sendSignInLink(email,mActionCodeSettings);
+                //프리퍼런스에 저장했던 이메일 넣어주기
+                SharedPreferences pref = getSharedPreferences("email", Activity.MODE_PRIVATE);
+                email = pref.getString("user-email", "");
 
+                //이메일 다시보내주기
+                sendSignInLink(email, mActionCodeSettings);
+                break;
+
+            case R.id.btn_back:
+                finish();
+                break;
+        }
     }
 
     public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
