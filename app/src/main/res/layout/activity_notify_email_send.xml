@@ -4,29 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".login.NotifyEmailSendActivity">
+    tools:context=".login.NotifyEmailSendActivity"
+    android:background="@color/subLightBrown">
 
-    <Button
-        android:id="@+id/resend_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="274dp"
-        android:text="이메일 링크 다시 보내기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginStart="55dp"
-        android:gravity="center_vertical"
-        android:text="입력하신 이메일로 링크가 전송되었습니다. 이메일에서 링크를 클릭하여 로그인을 완료해주세요"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="85dp"
+        android:layout_marginStart="85dp"
+        android:textAlignment="center"
+        android:text="입력하신 이메일로\n 링크가 전송되었습니다.\n 이메일에서 링크를 클릭하여 로그인을 완료해주세요"
+        android:textColor="@color/mainDarkBrown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/resend_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="75dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="50dp"
+        android:foregroundGravity="center_horizontal"
+        android:text="이메일 링크 재전송"
+        android:textColor="#ffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
