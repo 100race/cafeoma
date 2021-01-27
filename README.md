@@ -1,2 +1,2 @@
 # cafeoma
-The *inventory management* program
+The *inventory management* android application
