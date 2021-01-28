@@ -54,6 +54,7 @@ public class  UserPageActivity extends AppCompatActivity {
     private static final String TAG = "UserPageActivity";
     private final static String defaultImage = "";
     private boolean confirmDel;
+    private boolean confirmLogout;
 
     private static final ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(2, 4,
             60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
@@ -174,17 +175,52 @@ public class  UserPageActivity extends AppCompatActivity {
 
     // [로그아웃]
     public void logOut() {
-        FirebaseAuth.getInstance().signOut();
-        if (LoginManager.getInstance() != null) {
-            LoginManager.getInstance().logOut();
-        }
-        FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
-        Log.d("LOGOUT", "로그아웃성공");
-        if (currentUser == null) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        }
+        AlertDialog.Builder alt_builder = new AlertDialog.Builder(this);
+        alt_builder.setTitle("로그아웃 확인");
+        alt_builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                //dismiss 되면서 로그아웃
+                if(confirmLogout) {
+                    FirebaseAuth.getInstance().signOut();
+                    if (LoginManager.getInstance() != null) {
+                        LoginManager.getInstance().logOut();
+                    }
+                    FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
+                    Log.d("LOGOUT", "로그아웃성공");
+                    if (currentUser == null) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+
+        alt_builder.setMessage("로그아웃 하시겠습니까?")
+                .setPositiveButton("계속",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { //삭제
+                                confirmLogout = true;
+                                alert.dismiss();
+                                Toast.makeText(UserPageActivity.this, "정상적으로 로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                .setNegativeButton("취소",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) { //취소
+                                confirmLogout = false;
+                                alert.cancel();
+                                progressDialog.dismiss();
+                            }
+                        });
+        confirmLogout = false;
+        alert = alt_builder.create();
+        alert.show();
+
     }
 
     //[로딩 다이얼로그 초기화]

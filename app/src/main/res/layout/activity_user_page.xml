@@ -4,73 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.view.userpage.UserPageActivity">
-
-    <Button
-        android:id="@+id/btn_secession"
-        android:layout_width="114dp"
-        android:layout_height="36dp"
-        android:layout_marginBottom="196dp"
-        android:text="회원탈퇴"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_delCollection" />
-
-    <Button
-        android:id="@+id/btn_delCollection"
-        android:layout_width="119dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="18dp"
-        android:text="저장소 삭제"
-        app:layout_constraintBottom_toTopOf="@+id/btn_secession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_shareCode" />
-
-    <Button
-        android:id="@+id/btn_shareCode"
-        android:layout_width="121dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="21dp"
-        android:layout_marginStart="32dp"
-        android:text="저장소 코드 공유"
-        app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
-        app:layout_constraintStart_toStartOf="@+id/tv_userEmail"
-        app:layout_constraintTop_toBottomOf="@+id/tv_userEmail" />
-
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="108dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="142dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginStart="1dp"
-        android:text="로그아웃"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btn_secession"
-        app:layout_constraintStart_toStartOf="@+id/btn_secession"
-        app:layout_constraintTop_toBottomOf="@+id/btn_secession" />
+    tools:context=".main.view.userpage.UserPageActivity"
+    android:background="@color/subLightBrown">
 
     <ImageButton
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_back_arrow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/homeAsUpIndicator" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_userId"
-        android:layout_width="114dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="35dp"
-        android:layout_marginTop="144dp"
-        android:src="@drawable/com_facebook_profile_picture_blank_square"
+        android:id="@+id/iv_userImg"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/ic_user"
         app:layout_constraintBottom_toTopOf="@+id/tv_userEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,14 +32,71 @@
         android:id="@+id/tv_userEmail"
         android:layout_width="181dp"
         android:layout_height="26dp"
-        android:layout_marginBottom="223dp"
-        android:layout_marginEnd="112dp"
-        android:layout_marginTop="304dp"
+        android:layout_marginBottom="50dp"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/btn_logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btn_shareCode"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_userImg"
         android:gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/btn_shareCode"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp"
+        android:text="저장소 코드 공유"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        app:layout_constraintBottom_toTopOf="@+id/btn_delCollection"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_userEmail" />
+
+    <Button
+        android:id="@+id/btn_delCollection"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="10dp"
+        android:text="저장소 삭제"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        app:layout_constraintBottom_toTopOf="@id/btn_logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_shareCode" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="100dp"
+        android:text="로그아웃"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        app:layout_constraintBottom_toTopOf="@id/btn_secession"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_delCollection" />
+
+    <Button
+        android:id="@+id/btn_secession"
+        android:layout_width="245dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="30dp"
+        android:text="회원탈퇴"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
