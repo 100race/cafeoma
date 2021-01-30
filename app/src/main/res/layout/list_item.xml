@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardBackgroundColor="#FFFFFFFF"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="3dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -24,7 +24,7 @@
                 android:id="@+id/iv_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_margin="15dp"
+                android:layout_margin="10dp"
                 android:src="@android:drawable/ic_menu_gallery" />
 
             <LinearLayout
@@ -34,16 +34,16 @@
 
                 <TextView
                     android:id="@+id/tv_name"
-                    android:layout_width="150dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
                     android:text="제품명" />
 
                 <TextView
                     android:id="@+id/tv_remark"
-                    android:layout_width="150dp"
+                    android:layout_width="210dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
                     android:text="비고" />
 
             </LinearLayout>
@@ -51,23 +51,26 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btn_order"
-                    android:layout_width="50dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="60dp"
-                    android:text="주문"
-                    android:textSize="10dp" />
+                android:orientation="vertical"
+                >
 
                 <TextView
                     android:id="@+id/tv_quantity"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="5dp"
+                    android:textAlignment="center"
+                    />
 
+                <Button
+                    android:id="@+id/btn_order"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
+                    android:backgroundTint="@color/mainDarkBrown"
+                    android:text="주문"
+                    android:textColor="#ffff"
+                    android:textSize="10dp"
+                    />
 
             </LinearLayout>
 

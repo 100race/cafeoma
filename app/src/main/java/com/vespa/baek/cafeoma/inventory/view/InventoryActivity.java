@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -40,7 +41,7 @@ import java.util.Locale;
 public class InventoryActivity extends AppCompatActivity {
 
     //[View]
-    private Button btn_add;
+    private ImageButton btn_add;
     private EditText et_search;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
