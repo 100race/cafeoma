@@ -15,36 +15,37 @@
         >
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_mainImg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/loginimg" />
+            android:src="@drawable/loginimg"
+            />
 
         <LinearLayout
+            android:id="@+id/ll_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal|bottom"
             >
-
-
             <TextView
+                android:id="@+id/tv_logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
+                android:textColor="#ffff"
                 android:textSize="50dp"
                 android:textStyle="bold|italic"
-                tools:text="CafeOma" />
+                android:text="CafeOma" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingBottom="30dp"
-                android:textColor="#ffffff"
+                android:textColor="#ffff"
                 android:textSize="15dp"
-                tools:text="카페 재고관리 어플리케이션" />
+                android:text="카페 재고관리 어플리케이션" />
 
         </LinearLayout>
     </FrameLayout>

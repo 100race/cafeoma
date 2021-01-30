@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_fbLogin;
     private Button btn_email_login;
     private EditText emailbox;
+    private TextView tv_logo;
 
     //[Auth]
     private ActionCodeSettings mActionCodeSettings;
