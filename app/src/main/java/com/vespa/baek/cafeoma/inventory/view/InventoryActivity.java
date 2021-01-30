@@ -42,6 +42,7 @@ public class InventoryActivity extends AppCompatActivity {
 
     //[View]
     private ImageButton btn_add;
+    private ImageButton btn_back;
     private EditText et_search;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -60,7 +61,7 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_inventory);
 
-
+        btn_back = findViewById(R.id.btn_back);
         btn_add = findViewById(R.id.btn_add);
         et_search = findViewById(R.id.et_search);
 
@@ -146,6 +147,9 @@ public class InventoryActivity extends AppCompatActivity {
             case R.id.btn_add:
                 Intent intent = new Intent(InventoryActivity.this, ModifyInventoryActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.btn_back:
+                finish();
                 break;
         }
     }
