@@ -4,7 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.view.InputInvenIdActivity">
+    tools:context=".main.view.InputInvenIdActivity"
+    android:background="@color/subLightBrown">
+
+    <ImageButton
+        android:id="@+id/btn_back"
+        android:layout_width="20dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/ic_back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_confirm"
@@ -12,6 +23,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="200dp"
         android:text="확인"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
@@ -30,16 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_inventoryId" />
 
-    <ImageButton
-        android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="?attr/homeAsUpIndicator" />
-
     <TextView
         android:id="@+id/tv_inventoryId"
         android:layout_width="319dp"
@@ -48,6 +52,7 @@
         android:layout_marginTop="195dp"
         android:text="참여할 저장소의 코드를 입력해주세요"
         android:textSize="20dp"
+        android:textColor="@color/mainDarkBrown"
         app:layout_constraintBottom_toTopOf="@+id/et_inventoryId"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".inventory.view.ModifyInventoryActivity">
+    tools:context=".inventory.view.ModifyInventoryActivity"
+    android:background="@color/subLightBrown">
 
     <EditText
         android:id="@+id/et_shopUrl"
@@ -53,6 +54,9 @@
         android:layout_marginEnd="73dp"
         android:layout_marginTop="306dp"
         android:text="저장"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_cancel"
@@ -66,6 +70,9 @@
         android:layout_marginEnd="82dp"
         android:layout_marginStart="80dp"
         android:text="취소"
+        android:textColor="#ffff"
+        android:background="@drawable/login_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_save"
         app:layout_constraintStart_toStartOf="parent"
