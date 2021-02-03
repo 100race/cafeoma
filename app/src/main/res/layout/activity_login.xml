@@ -64,7 +64,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="25dp"
             android:layout_marginTop="25dp"
-            android:background="@drawable/login_button_design"
+            android:background="@drawable/round_button_design"
             android:text="구글 로그인"
             android:textColor="@color/mainDarkBrown" />
 
@@ -74,7 +74,7 @@
             android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="25dp"
-            android:background="@drawable/login_button_design"
+            android:background="@drawable/round_button_design"
             android:backgroundTint="@color/com_facebook_button_background_color"
             android:text="페이스북 로그인"
             android:textColor="#ffff" />
@@ -86,7 +86,7 @@
             android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="25dp"
-            android:background="@drawable/login_button_design"
+            android:background="@drawable/round_button_design"
             android:backgroundTint="@color/mainDarkBrown"
             android:textColor="#ffff"
             android:text="  이메일 로그인"
@@ -98,7 +98,8 @@
             android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="30dp"
-            android:background="@drawable/login_button_design"
+            android:paddingLeft="15dp"
+            android:background="@drawable/round_button_design"
             android:visibility="gone"
             android:hint="이메일 입력"
              />

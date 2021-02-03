@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView"
         app:layout_constraintBottom_toBottomOf="par"
-        android:background="@drawable/login_button_design"
+        android:background="@drawable/round_button_design"
         android:backgroundTint="@color/mainDarkBrown"
         />
 

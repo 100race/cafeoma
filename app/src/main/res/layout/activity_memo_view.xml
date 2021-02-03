@@ -11,20 +11,25 @@
         android:id="@+id/btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="53dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginStart="80dp"
+        android:background="@drawable/round_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        android:textColor="#ffff"
         android:text="취소"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_remark" />
+         />
 
     <Button
         android:id="@+id/btn_toEdit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="51dp"
-        android:layout_marginEnd="73dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="80dp"
+        android:background="@drawable/round_button_design"
+        android:backgroundTint="@color/mainDarkBrown"
+        android:textColor="#ffff"
         android:text="수정"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -33,10 +38,10 @@
         android:id="@+id/tv_contents"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="192dp"
+        android:layout_marginBottom="150dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginStart="14dp"
-        android:background="@drawable/edittextshape"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/edittext_design"
         android:inputType="textMultiLine"
         android:lines="8"
         android:maxLines="100"
@@ -51,8 +56,8 @@
         android:layout_width="252dp"
         android:layout_height="45dp"
         android:layout_marginBottom="19dp"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="104dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="50dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:textStyle="bold"
@@ -62,11 +67,10 @@
 
     <TextView
         android:id="@+id/tv_date"
-        android:layout_width="207dp"
-        android:layout_height="31dp"
-        android:layout_marginBottom="46dp"
-        android:layout_marginEnd="31dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="45dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
