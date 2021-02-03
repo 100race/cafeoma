@@ -7,46 +7,82 @@
     tools:context=".inventory.view.ModifyInventoryActivity"
     android:background="@color/subLightBrown">
 
-    <EditText
-        android:id="@+id/et_shopUrl"
-        android:layout_width="107dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="439dp"
-        android:layout_marginEnd="63dp"
-        android:layout_marginStart="10dp"
-        android:paddingLeft="5dp"
-        android:background="@drawable/edittext_design"
-        app:layout_constraintBottom_toTopOf="@+id/btn_save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_u"
-        app:layout_constraintTop_toBottomOf="@+id/et_quantity" />
-
     <TextView
-        android:id="@+id/tv_u"
+        android:id="@+id/tv_n"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="95dp"
-        android:layout_marginEnd="10dp"
+        android:paddingTop="10dp"
         android:layout_marginStart="20dp"
-        android:text="구입주소"
-        app:layout_constraintBottom_toTopOf="@+id/et_remark"
-        app:layout_constraintEnd_toStartOf="@+id/et_shopUrl"
+        android:layout_marginTop="85dp"
+        android:text="재고명"
+        app:layout_constraintBottom_toTopOf="@+id/tv_q"
+        app:layout_constraintEnd_toStartOf="@+id/et_name"
         app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
-        app:layout_constraintTop_toBottomOf="@+id/tv_q" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="필수입력사항"
+        android:paddingLeft="5dp"
+        android:background="@drawable/edittext_design"
+        app:layout_constraintBottom_toTopOf="@+id/et_quantity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_n"
+        app:layout_constraintTop_toTopOf="@+id/tv_n" />
 
     <TextView
         android:id="@+id/tv_q"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="27dp"
-        android:layout_marginEnd="36dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="10dp"
         android:text="수량"
-        app:layout_constraintBottom_toTopOf="@+id/tv_u"
-        app:layout_constraintEnd_toStartOf="@+id/et_quantity"
-        app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
-        app:layout_constraintTop_toBottomOf="@+id/tv_n" />
+        app:layout_constraintEnd_toEndOf="@id/tv_n"
+        app:layout_constraintTop_toTopOf="@id/et_quantity" />
+
+
+    <EditText
+        android:id="@+id/et_quantity"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edittext_design"
+        android:ems="10"
+        android:inputType="number"
+        android:paddingLeft="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/et_shopUrl"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/et_name"
+        app:layout_constraintTop_toBottomOf="@id/et_name" />
+
+    <TextView
+        android:id="@+id/tv_u"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="95dp"
+        android:text="구입주소"
+        app:layout_constraintBottom_toTopOf="@+id/et_remark"
+        app:layout_constraintEnd_toEndOf="@+id/tv_n"
+        app:layout_constraintTop_toTopOf="@+id/et_shopUrl" />
+
+    <EditText
+        android:id="@+id/et_shopUrl"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"
+        android:background="@drawable/edittext_design"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_u"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/et_name"
+        app:layout_constraintTop_toBottomOf="@+id/et_quantity" />
+
 
     <Button
         android:id="@+id/btn_cancel"
@@ -63,7 +99,7 @@
          />
 
     <Button
-        android:id="@+id/btn_toEdit"
+        android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -79,55 +115,26 @@
         android:id="@+id/iv_selectImage"
         android:layout_width="129dp"
         android:layout_height="170dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="68dp"
-        app:layout_constraintBottom_toTopOf="@+id/et_remark"
+        android:layout_marginStart="30dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_u"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_name"
         app:srcCompat="@android:drawable/ic_menu_gallery"
         android:scaleType="fitCenter"/>
 
     <EditText
-        android:id="@+id/et_name"
-        android:layout_width="107dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="11dp"
-        android:layout_marginEnd="63dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="84dp"
-        android:hint="필수입력사항"
-        android:paddingLeft="5dp"
-        android:background="@drawable/edittext_design"
-        app:layout_constraintBottom_toTopOf="@+id/et_quantity"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_n"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_n"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="11dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="84dp"
-        android:text="재고명"
-        app:layout_constraintBottom_toTopOf="@+id/tv_q"
-        app:layout_constraintEnd_toStartOf="@+id/et_name"
-        app:layout_constraintStart_toEndOf="@+id/iv_selectImage"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
         android:id="@+id/et_remark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="304dp"
-        android:layout_marginEnd="159dp"
-        android:layout_marginStart="39dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="200dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="43dp"
         android:ems="10"
         android:hint="비고"
-        android:paddingLeft="5dp"
+        android:gravity="top"
+        android:paddingTop="15dp"
+        android:paddingLeft="10dp"
         android:background="@drawable/edittext_design"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -135,21 +142,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_selectImage" />
 
-    <EditText
-        android:id="@+id/et_quantity"
-        android:layout_width="107dp"
-        android:layout_height="42dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="63dp"
-        android:layout_marginTop="11dp"
-        android:ems="10"
-        android:paddingLeft="5dp"
-        android:background="@drawable/edittext_design"
-        android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/et_shopUrl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_q"
-        app:layout_constraintTop_toBottomOf="@+id/et_name" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
