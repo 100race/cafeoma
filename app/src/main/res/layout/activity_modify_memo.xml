@@ -22,7 +22,7 @@
         />
 
     <Button
-        android:id="@+id/btn_toEdit"
+        android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -34,22 +34,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-
-    <EditText
-        android:id="@+id/et_title"
-        android:layout_width="252dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="19dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="50dp"
-        android:ems="10"
-        android:hint="제목"
-        android:inputType="textPersonName"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/tv_contents"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/tv_contents"
         android:layout_width="0dp"
@@ -59,6 +43,10 @@
         android:layout_marginStart="15dp"
         android:background="@drawable/edittext_design"
         android:inputType="textMultiLine"
+        android:hint="내용 입력"
+        android:paddingLeft="10dp"
+        android:paddingTop="15dp"
+        android:gravity="top"
         android:lines="8"
         android:maxLines="100"
         android:scrollbars="vertical"
@@ -67,6 +55,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
+    <EditText
+        android:id="@+id/tv_title"
+        android:layout_width="252dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="19dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:hint="제목"
+        android:paddingLeft="10dp"
+        android:inputType="textPersonName"
+        android:background="@drawable/edittext_design"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_contents"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 
