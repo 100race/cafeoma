@@ -50,9 +50,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-functions:19.0.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
-    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    //Firebase Android BoM : 모든 firebase 라이브러리 버전 호환
+    implementation platform('com.google.firebase:firebase-bom:26.4.0')
+    implementation 'com.google.firebase:firebase-auth'
 // (추가) 이메일,페이스북로그인 인증 라이브러리
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 // (추가) 구글플레이 이메일 인증 종속항목
     implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
     implementation 'androidx.annotation:annotation:1.1.0'

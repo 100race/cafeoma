@@ -1,0 +1,6 @@
+C:\Users\engineer\cafeomakey.jks
+키 경로
+password sodal6134
+alias cafeomakey
+password 같이
+first and last name kyoungju

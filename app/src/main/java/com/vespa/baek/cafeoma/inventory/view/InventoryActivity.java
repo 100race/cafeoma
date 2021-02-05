@@ -65,6 +65,7 @@ public class InventoryActivity extends AppCompatActivity {
         btn_add = findViewById(R.id.btn_add);
         et_search = findViewById(R.id.et_search);
 
+        btn_back.setOnClickListener(v -> onClick(v));
         btn_add.setOnClickListener(v -> onClick(v));
 
         recyclerView = findViewById(R.id.inventoryView);

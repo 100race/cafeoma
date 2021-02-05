@@ -95,6 +95,7 @@ public class  UserPageActivity extends AppCompatActivity {
         btn_logout.setOnClickListener(v->onClick(v));
 
         mAuth = FirebaseAuth.getInstance();
+        mAuth.addAuthStateListener(firebaseAuth -> mAuth = FirebaseAuth.getInstance());
         db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -155,13 +156,17 @@ public class  UserPageActivity extends AppCompatActivity {
                 initProgDialog();
                 new UserModel().checkInventory(db, userUid);
                 progressDialog.show();
+                progressDialog.dismiss();
 
                 handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         delUserDialog();
+
                     }
                 }, 2000);
+
+
 
                 break;
             case R.id.btn_logout:
@@ -375,7 +380,7 @@ public class  UserPageActivity extends AppCompatActivity {
                                         public void run() {
                                             delUser();
                                             progressDialog.dismiss();
-                                            Toast.makeText(UserPageActivity.this,"저장소가 삭제되었습니다.",Toast.LENGTH_SHORT).show();
+
                                         }
                                     }, 2000);
                                 } else { // 탈퇴아니면 유저 삭제 x
@@ -503,22 +508,38 @@ public class  UserPageActivity extends AppCompatActivity {
         currentUser.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {  // 이부분 실행이안됐음
+                    public void onComplete(@NonNull Task<Void> task) {  // 이부분 실행이안됐음 로그인한지 오래된 계정이라 test때 오류 조심
                         if (task.isSuccessful()) {
                             Log.d(TAG, "사용자 정보 : 사용자 탈퇴");
-                            progressDialog.cancel();
-                            Toast.makeText(getApplicationContext(), "탈퇴 완료되었습니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplication(),"사용자 탈퇴되었습니다",Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                            finish();
+//                           mAuth.signOut();
+//                            if (LoginManager.getInstance() != null) {
+//                                LoginManager.getInstance().logOut();
+//                            }
+//                            FirebaseUser currentUser = mAuth.getCurrentUser(); //로그아웃이 제대로 됐으면.
+//                            if (currentUser == null) {
+//                                Toast.makeText(getApplicationContext(), "탈퇴 완료되었습니다.", Toast.LENGTH_SHORT).show();
+//                                Log.d(TAG, "사용자 정보 : 탈퇴 후 로그아웃성공");
+//                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+//                            }else{
+//                                Toast.makeText(getApplicationContext(), "탈퇴 실패.", Toast.LENGTH_SHORT).show();
+//                                Log.d(TAG, "사용자 정보 : 탈퇴 후 로그아웃 실패");
+//                            }
+
                         }
                     }
                 })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
                 Log.d(TAG, " 사용자 정보 : 사용자 탈퇴 실패");
-
+                Toast.makeText(UserPageActivity.this,"사용자 탈퇴 실패했습니다",Toast.LENGTH_LONG).show();
             }
         });
     }
