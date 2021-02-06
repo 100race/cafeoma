@@ -43,6 +43,7 @@
         android:layout_marginStart="15dp"
         android:background="@drawable/edittext_design"
         android:inputType="textMultiLine"
+        android:textSize="13dp"
         android:lines="8"
         android:gravity="top"
         android:paddingLeft="10dp"

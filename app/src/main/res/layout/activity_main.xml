@@ -51,7 +51,7 @@
 
         <Button
             android:id="@+id/btn_toMemo"
-            android:text="메모장"
+            android:text="인수인계 게시판"
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:layout_margin="5dp"
@@ -84,7 +84,7 @@
 
         <Button
             android:id="@+id/btn_toUserPage"
-            android:text="사용자페이지"
+            android:text="마이페이지"
             android:layout_width="0dp"
             android:layout_height="230dp"
             android:paddingTop="40dp"

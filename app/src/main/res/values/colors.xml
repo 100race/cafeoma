@@ -6,4 +6,5 @@
     <color name="mainDarkBrown">#301818</color>
     <color name="subLightBrown">#4f7d6464</color>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 </resources>

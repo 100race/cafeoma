@@ -42,7 +42,8 @@
             android:name=".login.LoginActivity"
             android:label="@string/title_activity_login"
             />
-        <activity android:name=".main.view.MainActivity">
+        <activity android:name=".main.view.MainActivity"></activity>
+        <activity android:name=".main.view.SplashActivity" android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
