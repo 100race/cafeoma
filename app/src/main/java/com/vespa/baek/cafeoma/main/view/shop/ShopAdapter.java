@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -49,11 +50,11 @@ public class ShopAdapter extends FirestoreRecyclerAdapter<Shop, ShopViewHolder> 
         holder.ll_shop.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    if (model.getShopUrl() != "" && model.getShopUrl() != null) {
+                                                    if ( model.getShopUrl() != null && URLUtil.isValidUrl(model.getShopUrl())) {
                                                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getShopUrl()));
                                                         v.getContext().startActivity(intent);
                                                     } else {
-                                                        Toast.makeText(getApplicationContext(), "사이트를 등록해주세요", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getApplicationContext(), "유효한 사이트를 등록해주세요", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }

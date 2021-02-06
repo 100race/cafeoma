@@ -51,10 +51,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_shop"
         android:layout_width="match_parent"
-        android:layout_height="551dp"
+        android:layout_height="match_parent"
         android:horizontalSpacing="10dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:scrollbarFadeDuration="0"
         android:scrollbarSize="5dp"
         android:scrollbarThumbVertical="@android:color/darker_gray"
