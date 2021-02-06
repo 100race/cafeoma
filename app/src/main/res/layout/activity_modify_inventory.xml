@@ -22,9 +22,9 @@
 
     <EditText
         android:id="@+id/et_name"
+        android:textSize="13dp"
         android:layout_width="0dp"
         android:layout_height="42dp"
-        android:textSize="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:hint="필수입력사항"
@@ -48,13 +48,14 @@
 
     <EditText
         android:id="@+id/et_quantity"
+        android:textSize="13dp"
+        android:hint="0"
         android:layout_width="0dp"
         android:layout_height="42dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/edittext_design"
         android:ems="10"
-        android:textSize="10dp"
         android:inputType="number"
         android:paddingLeft="5dp"
         app:layout_constraintBottom_toTopOf="@+id/et_shopUrl"
@@ -74,11 +75,12 @@
 
     <EditText
         android:id="@+id/et_shopUrl"
+        android:hint="사이트 url을 복사해 입력"
+        android:textSize="11dp"
         android:layout_width="0dp"
         android:layout_height="42dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
-        android:textSize="10dp"
         android:paddingLeft="5dp"
         android:background="@drawable/edittext_design"
         app:layout_constraintBottom_toBottomOf="@+id/tv_u"

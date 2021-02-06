@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -78,11 +79,11 @@ public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,In
         holder.btn_order.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    if (model.getShopUrl() != null) {
+                                                    if (model.getShopUrl() != null && URLUtil.isValidUrl(model.getShopUrl())) {
                                                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getShopUrl()));
                                                         v.getContext().startActivity(intent);
-                                                    } else {
-                                                        Toast.makeText(getApplicationContext(), "주문 사이트를 등록해주세요", Toast.LENGTH_SHORT).show();
+                                                    }else{
+                                                        Toast.makeText(getApplicationContext(), "유효한 주문 사이트를 등록해주세요", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             }
@@ -90,6 +91,7 @@ public class InventoryAdapter extends FilterableFirestoreRecyclerAdapter<Item,In
 
         holder.setAdapter(this); // adpater을 연결하기 위해서 this
     }
+
 }
 
 
