@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         AppEventsLogger.activateApp(this);
 
-
         // [Email 로그인 초기화]
         btn_email_login = findViewById(R.id.btn_emailLogin);
         emailbox = findViewById(R.id.emailbox);

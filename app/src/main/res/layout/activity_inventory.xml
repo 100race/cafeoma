@@ -57,12 +57,12 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="560dp">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/inventoryView"
             android:layout_width="match_parent"
-            android:layout_height="560dp"
+            android:layout_height="match_parent"
             android:scrollbars="vertical"
             />
     </LinearLayout>
