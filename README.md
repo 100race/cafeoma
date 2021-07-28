@@ -1,3 +1,4 @@
+![카페오마 메인](https://user-images.githubusercontent.com/46726709/127270165-995f791d-2a93-4c3b-9251-5acd234318fc.PNG)
 # cafeoma
 The *inventory management* application for cafe or restaurant<br>
 
